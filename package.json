@@ -1,13 +1,14 @@
 {
-  "name": "node-typescript-boilerplate",
+  "name": "pg-rls-util",
   "version": "0.0.0",
-  "description": "Minimalistic boilerplate to quick-start Node.js development in TypeScript.",
+  "description": "A tool to generate postgres row-level-security policies.",
   "engines": {
     "node": ">= 12.13 <13"
   },
   "devDependencies": {
     "@types/jest": "~26.0.5",
     "@types/node": "~12.12",
+    "@types/yargs": "^15.0.7",
     "@typescript-eslint/eslint-plugin": "~3.7.0",
     "@typescript-eslint/parser": "~3.7.0",
     "eslint": "~7.5.0",
@@ -25,13 +26,17 @@
     "build": "tsc -p tsconfig.release.json",
     "build:watch": "tsc -w -p tsconfig.release.json",
     "lint": "eslint . --ext .ts,.tsx",
+    "exec": "npm run build && node build/src/pg-rls-util",
     "test": "jest --coverage",
     "test:watch": "jest --watch"
   },
-  "author": "Jakub Synowiec <github@jakubsynowiec.info>",
+  "author": "Kevin Burkett",
   "license": "Apache-2.0",
   "dependencies": {
-    "tslib": "~2.0.0"
+    "mustache": "^4.0.1",
+    "pg": "^8.3.3",
+    "tslib": "~2.0.0",
+    "yargs": "^16.0.3"
   },
   "volta": {
     "node": "12.18.2",
