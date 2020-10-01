@@ -22,12 +22,12 @@ const functionPolicyTemplate = `
   `
 
 function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFunctionSecurityProfile, roles: PgrRoleSet) {
+  const schemaName = fn.functionSchema
   const revokeRolesList = ['public', ...roles.dbUserRoles.map((r:PgrRole) => r.roleName)].join(',\n       ')
-
   const roleGrant = functionSecurityProfile.grants.EXECUTE.length > 0 ? {
     roles: functionSecurityProfile.grants.EXECUTE.join(', ')
     ,action: "EXECUTE"
-    ,schemaName: fn.functionSchema
+    ,schemaName: schemaName
     ,functionName: fn.functionName
   } : null
 
@@ -37,11 +37,10 @@ function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFun
   .map(adt => adt.trim().split(' ')[1])
   .join(',') : undefined
 
-  const functionSignature = fn ? `${fn.functionSchema}.${fn.functionName} (${signatureArgumentDataTypes})` : `{{functionSchema}}.{{functionName}} ({{signatureArgumentDataTypes}})`
-
+  const functionSignature = fn ? `${schemaName}.${fn.functionName} (${signatureArgumentDataTypes})` : `{{functionSchema}}.{{functionName}} ({{signatureArgumentDataTypes}})`
 
   const templateVariables = {
-    schemaName: fn.functionSchema,
+    schemaName: schemaName,
     functionName: fn.functionName,
     functionSecurityProfileName: functionSecurityProfile.name,
     revokeRolesList: revokeRolesList,
@@ -49,15 +48,12 @@ function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFun
     functionSignature: functionSignature
   }
 
+  // console.log(templateVariables)
   return Mustache.render(
     functionPolicyTemplate,
     templateVariables
   )
 
-}
-
-async function computeFunctionScript(fn: PgrFunction, securityProfile: PgrFunctionSecurityProfile, roles: PgrRoleSet) {
-  return computeFunctionPolicy(fn, securityProfile, roles)
 }
 
 async function computeSchemaFunctionScripts(schemaFunctionAssignmentSet: PgrFunctionSecurityProfileAssignmentSet, securityProfiles: PgrFunctionSecurityProfile[], roles: PgrRoleSet, introspection: any): Promise<PgrSchemaFunctionScriptSet>{
@@ -70,7 +66,9 @@ async function computeSchemaFunctionScripts(schemaFunctionAssignmentSet: PgrFunc
           .find((t: PgrFunction) => t.functionName === functionName)
         const securityProfile = securityProfiles.find((sp: PgrFunctionSecurityProfile) => sp.name === schemaFunctionAssignmentSet.functionAssignments[functionName])
         if (!securityProfile) throw new Error(`No securityProfile: ${schemaFunctionAssignmentSet.functionAssignments[functionName]}`)
-        const functionScript = await computeFunctionScript(fn, securityProfile, roles)
+        const functionScript = fn ?
+          await computeFunctionPolicy(fn, securityProfile, roles) :
+          `-- Function does not exist in introspection for function ${schemaFunctionAssignmentSet.schemaName}.${functionName}`
         return {
           functionName: functionName,
           functionScript: functionScript

@@ -1,9 +1,9 @@
 import {existsSync, readFileSync} from 'fs'
 import { PgrConfig, PgrFunctionSecurityProfileAssignmentSet, PgrFunctionSecurityProfileSet, PgrRoleSet, PgrSchemaTableProfileAssignmentSet, PgrTableSecurityProfileSet } from './d'
-const dbConfigPath = `${process.cwd()}/.pgrlsgen/current-draft/db-config.json`
-let dbConfig = {
-  connectionString: "NO DB CONFIG"
-}
+// const dbConfigPath = `${process.cwd()}/.pgrlsgen/current-draft/db-config.json`
+// let dbConfig = {
+//   connectionString: "NO DB CONFIG"
+// }
 
 let config: PgrConfig | null = null;
 
@@ -27,22 +27,21 @@ async function loadConfig(workDir?: string): Promise<PgrConfig> {
   const fspPath = `${cwd}/function-security-profiles.json`
   const artifactsDirectory = `${cwd}/artifacts`
 
-  const dbConfigExists = await existsSync(dbConfigPath)
-  if (dbConfigExists) {
-    const dbConfigContents = await readFileSync(dbConfigPath)
-    dbConfig = JSON.parse(dbConfigContents.toString())
-  }
+  // const dbConfigExists = await existsSync(dbConfigPath)
+  // if (dbConfigExists) {
+  //   const dbConfigContents = await readFileSync(dbConfigPath)
+  //   dbConfig = JSON.parse(dbConfigContents.toString())
+  // }
+  const connectionString = process.env.PGR_DB_CONNECTION_STRING || "postgres://postgres:1234@0.0.0.0/soro_sales"
 
-  const rFc = await readFileSync(rPath)
-  const roles: PgrRoleSet = JSON.parse(rFc.toString())
-
+  const roles: PgrRoleSet = await loadOneConfigFile(rPath)
   const tableSecurityProfiles: PgrTableSecurityProfileSet = await loadOneConfigFile(tspPath)
   const functionSecurityProfiles: PgrFunctionSecurityProfileSet = await loadOneConfigFile(fspPath)
   const tableSecurityProfileAssignments: PgrSchemaTableProfileAssignmentSet[] = await loadOneConfigFile(tpaPath)
   const functionSecurityProfileAssignments: PgrFunctionSecurityProfileAssignmentSet[] = await loadOneConfigFile(fpaPath)
 
   config = {
-    dbConfig: dbConfig,
+    dbConfig: {connectionString: connectionString},
     artifactsDirectory: artifactsDirectory,
     roleSet: roles,
     tableSecurityProfileSet: tableSecurityProfiles,
