@@ -14,16 +14,21 @@ async function handler() {
   const config: PgrConfig = await loadConfig()
   const dbIntrospection = await introspectDb()
 
-  // const configSchemata = config
-  // const newSchemata = 
+  const configSchemata = config.tableSecurityProfileAssignments.map(tspa => tspa.schemaName)
+  const dbIntrospectionSchemata = dbIntrospection.schemaTree.map(s => s.schemaName)
 
-  console.log(config)
-  console.log(dbIntrospection)
+  console.log(configSchemata)
+  console.log(dbIntrospectionSchemata)
 
-  // get introspection
-
-  // get current table assignment
+  // const removedTables = config.tableSecurityProfileAssignments.map(
+  //   tspa => {
+  //     const rts = Object.keys(tspa.tableAssignments).filter(t => )
+  //   }
+  // )
   // reduce to find new tables, views, functions with default policies
+  // tables
+
+
   // reduce to find dropped tables, views, function
   // write diff json file
     

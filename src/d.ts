@@ -173,3 +173,10 @@ export interface PgrScriptSet {
   removeAllRlsScript: string,
   createRolesScript: string
 }
+
+export interface PgrDbIntrospection {
+  schemaTree: PgrSchema[]
+  existingPolicies: any,
+  existingPolicyTemplates: any,
+  enabledRoles: any
+}

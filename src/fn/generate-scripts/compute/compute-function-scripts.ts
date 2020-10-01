@@ -48,7 +48,6 @@ function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFun
     functionSignature: functionSignature
   }
 
-  // console.log(templateVariables)
   return Mustache.render(
     functionPolicyTemplate,
     templateVariables
@@ -58,7 +57,6 @@ function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFun
 
 async function computeSchemaFunctionScripts(schemaFunctionAssignmentSet: PgrFunctionSecurityProfileAssignmentSet, securityProfiles: PgrFunctionSecurityProfile[], roles: PgrRoleSet, introspection: any): Promise<PgrSchemaFunctionScriptSet>{
   const p = Object.keys(schemaFunctionAssignmentSet.functionAssignments)
-    // .filter(k => ['seller', 'strain'].indexOf(k) > -1)
     .map(
       async (functionName: string) => {
         const fn = introspection.schemaTree

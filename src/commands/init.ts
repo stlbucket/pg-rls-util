@@ -10,7 +10,7 @@ let config
 
 async function  createBaseDir(argv) {
   if (argv.forceAll) {
-   // @ts-ignore
+   // @ts-ignore - recursive option is not in types
    await rmdirSync(config.baseDirectory, {recursive: true})
   }
 
@@ -115,7 +115,6 @@ const command = 'init'
 const aliases = 'i'
 const describe = 'initialize the current draft or an entire project'
 const builder: CommandBuilder = {
-  c: { type: 'string', alias: 'connectionString', demandOption: true, description: 'postgres connection string'},
   f: { type: 'boolean', alias: 'force', description: 'will reset the current-draft to the previous version or to default if this is a new project' },
   x: { type: 'boolean', alias: 'forceAll', description: 'will reset the entire project' }
 }

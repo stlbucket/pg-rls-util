@@ -1,5 +1,5 @@
 import loadConfig from '../../../config'
-import { PgrTable, PgrTableSecurityProfile, PgrRoleSet, PgrRole, PgrMasterTableScriptSet, PgrSchema, PgrSchemaTableProfileAssignmentSet, PgrSchemaTableScriptSet, PgrTableScript, ColumnExclusionSet, PgrConfig, PgrRoleGrant, PgrTableSecurityProfileSet } from '../../../d'
+import { PgrTable, PgrTableSecurityProfile, PgrRoleSet, PgrRole, PgrMasterTableScriptSet, PgrSchema, PgrSchemaTableProfileAssignmentSet, PgrSchemaTableScriptSet, PgrTableScript, ColumnExclusionSet, PgrConfig, PgrRoleGrant, PgrTableSecurityProfileSet, PgrDbIntrospection } from '../../../d'
 
 import * as Mustache from 'mustache'
 
@@ -137,7 +137,7 @@ function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTableSecu
 
 }
 
-async function computeSchemaTableScripts(schemaTableAssignmentSet: PgrSchemaTableProfileAssignmentSet, securityProfiles: PgrTableSecurityProfile[], roles: PgrRoleSet, introspection: any):  Promise<PgrSchemaTableScriptSet>{
+async function computeSchemaTableScripts(schemaTableAssignmentSet: PgrSchemaTableProfileAssignmentSet, securityProfiles: PgrTableSecurityProfile[], roles: PgrRoleSet, introspection: PgrDbIntrospection):  Promise<PgrSchemaTableScriptSet>{
   const p = Object.keys(schemaTableAssignmentSet.tableAssignments)
   // const p = ['contact']
     .map(
@@ -165,7 +165,7 @@ async function computeSchemaTableScripts(schemaTableAssignmentSet: PgrSchemaTabl
   }
 }
 
-async function computeAllSchemaTableScripts(tableSecurityProfileAssignments: PgrSchemaTableProfileAssignmentSet[], mappedSecurityProfiles: PgrTableSecurityProfile[], roleSet: PgrRoleSet, introspection: any): Promise<PgrMasterTableScriptSet> {
+async function computeAllSchemaTableScripts(tableSecurityProfileAssignments: PgrSchemaTableProfileAssignmentSet[], mappedSecurityProfiles: PgrTableSecurityProfile[], roleSet: PgrRoleSet, introspection: PgrDbIntrospection): Promise<PgrMasterTableScriptSet> {
   const p = tableSecurityProfileAssignments
   // .filter(s => s.schemaName === 'soro')
   .map(
@@ -213,7 +213,7 @@ function mapSecurityProfile(
   }
 }
 
-async function computeAllTableScripts(introspection: any): Promise<PgrMasterTableScriptSet>{
+async function computeAllTableScripts(introspection: PgrDbIntrospection): Promise<PgrMasterTableScriptSet>{
   const config: PgrConfig = await loadConfig()
 
   const tableSecurityProfileSet: PgrTableSecurityProfileSet = config.tableSecurityProfileSet
