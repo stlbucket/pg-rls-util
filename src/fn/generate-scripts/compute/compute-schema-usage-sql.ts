@@ -1,4 +1,4 @@
-import Mustache from "mustache"
+import * as Mustache from 'mustache'
 import loadConfig from "../../../config"
 import { PgrRole, PgrRoleGrant, PgrSchemaTableProfileAssignmentSet, PgrTableSecurityProfile } from '../../../d'
 

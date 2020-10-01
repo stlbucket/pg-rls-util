@@ -1,4 +1,4 @@
-const Mustache = require('mustache')
+import * as Mustache from 'mustache'
 import loadConfig from '../../../config'
 import {PgrRoleSet, PgrFunction, PgrFunctionSecurityProfile, PgrSchema, PgrRole, PgrFunctionSecurityProfileAssignmentSet, PgrMasterFunctionScriptSet, PgrSchemaFunctionProfileAssignmentSet, PgrSchemaFunctionScriptSet, PgrFunctionScript, PgrConfig, PgrFunctionSecurityProfileSet} from "../../../d"
 

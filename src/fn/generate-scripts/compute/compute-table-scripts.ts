@@ -1,7 +1,7 @@
 import loadConfig from '../../../config'
 import { PgrTable, PgrTableSecurityProfile, PgrRoleSet, PgrRole, PgrMasterTableScriptSet, PgrSchema, PgrSchemaTableProfileAssignmentSet, PgrSchemaTableScriptSet, PgrTableScript, ColumnExclusionSet, PgrConfig, PgrRoleGrant, PgrTableSecurityProfileSet } from '../../../d'
 
-const Mustache = require('mustache')
+import * as Mustache from 'mustache'
 
 const tablePolicyTemplate = `
 ----******

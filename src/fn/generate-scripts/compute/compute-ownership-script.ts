@@ -1,4 +1,4 @@
-import Mustache from 'mustache'
+import * as Mustache from 'mustache'
 import { PgrSchema } from '../../../d';
 import loadConfig from '../../../config'
 

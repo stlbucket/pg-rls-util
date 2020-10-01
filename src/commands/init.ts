@@ -6,6 +6,7 @@ import {introspectDb} from '../fn/introspect-db'
 // import {PgrSchema, PgrTable, PgrSchemaTableProfileAssignmentSet} from '../d'
 import {ConnectionConfig} from 'pg'
 import { PgrSchemaTableProfileAssignmentSet, PgrSchema, PgrTable } from '../d'
+import {CommandBuilder} from 'yargs'
 
 const baseDir = `${process.cwd()}/.pgrlsgen`
 const currentDraftDir = `${baseDir}/current-draft`
@@ -102,7 +103,7 @@ async function  doFunctionSecurityProfileAssignments(introspection:any) {
   await writeFileSync(functionSecurityProfileAssignmentsPath, JSON.stringify(functionSecurityProfileAssignments,null,2))
 }
 
-async function run(argv) {
+async function handler(argv) {
   // const connectionString = argv.connectionString
 
   await doBaseDir(argv)
@@ -115,4 +116,14 @@ async function run(argv) {
   process.exit()
 }
 
-export default run
+const command = 'init'
+const aliases = 'i'
+const describe = 'initialize the current draft or an entire project'
+const builder: CommandBuilder = {
+  c: { type: 'string', alias: 'connectionString', demandOption: true, description: 'postgres connection string'},
+  f: { type: 'boolean', alias: 'force', description: 'will reset the current-draft to the previous version or to default if this is a new project' },
+  x: { type: 'boolean', alias: 'forceAll', description: 'will reset the entire project' }
+}
+const deprecated = false
+
+export default {command, aliases, describe, builder, handler, deprecated}
