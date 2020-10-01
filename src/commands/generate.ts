@@ -2,10 +2,8 @@ import {introspectDb} from '../fn/introspect-db'
 import generateAllScripts from '../fn/generate-scripts/generate-all-scripts'
 import {CommandBuilder} from 'yargs'
 
-async function handler() {
-    
+async function handler() {    
   const introspection = await introspectDb()
-
   await generateAllScripts(introspection)
 
   process.exit()

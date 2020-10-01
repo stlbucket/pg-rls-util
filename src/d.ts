@@ -124,7 +124,10 @@ export interface PgrFunctionSecurityProfileAssignmentSet {
 
 export interface PgrConfig {
   dbConfig: ConnectionConfig,
+  baseDirectory: string,
+  currentDraftDirectory: string,
   artifactsDirectory: string,
+  releasesDirectory: string,
   roleSet: PgrRoleSet,
   tableSecurityProfileSet: PgrTableSecurityProfileSet,
   functionSecurityProfileSet: PgrFunctionSecurityProfileSet,

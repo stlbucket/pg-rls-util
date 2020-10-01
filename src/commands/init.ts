@@ -3,24 +3,22 @@ import defaultTableSecurityProfiles from '../default/default-table-security-prof
 import defaultFunctionSecurityProfiles from '../default/default-function-security-profiles'
 import defaultPgrRoleSet from '../default/default-role-set'
 import {introspectDb} from '../fn/introspect-db'
-import {ConnectionConfig} from 'pg'
 import { PgrSchemaTableProfileAssignmentSet, PgrSchema, PgrTable, PgrSchemaFunctionProfileAssignmentSet } from '../d'
 import {CommandBuilder} from 'yargs'
-
-const baseDir = `${process.cwd()}/.pgrlsgen`
-const currentDraftDir = `${baseDir}/current-draft`
+import loadConfig from '../config'
+let config
 
 async function  createBaseDir(argv) {
   if (argv.forceAll) {
    // @ts-ignore
-   await rmdirSync(baseDir, {recursive: true})
+   await rmdirSync(config.baseDirectory, {recursive: true})
   }
 
-  const baseDirExists = await existsSync(baseDir)
-  if (!baseDirExists) {
-    console.log(`creating baseDir: ${baseDir}`)
+  const baseDirectoryExists = await existsSync(config.baseDirectory)
+  if (!baseDirectoryExists) {
+    console.log(`creating config.baseDirectory: ${config.baseDirectory}`)
 
-    await mkdirSync(baseDir)
+    await mkdirSync(config.baseDirectory)
   }
 }
 
@@ -30,14 +28,14 @@ async function  buildCurrentDraftDir(argv: any, tableProfileAssignments: PgrSche
     await rmdirSync(currentDraftDir, {recursive: true})
   }
 
-  const currentDraftDirExists = await existsSync(currentDraftDir)
+  const currentDraftDirExists = await existsSync(config.currentDraftDirectory)
   if (!currentDraftDirExists) {
-    await mkdirSync(currentDraftDir)
-    const tableSecurityProfilesPath = `${currentDraftDir}/table-security-profiles.json`
-    const functionSecurityProfilesPath = `${currentDraftDir}/function-security-profiles.json`
-    const roleSetFilePath = `${currentDraftDir}/roles.json`
-    const tableProfileAssignmentsPath = `${currentDraftDir}/table-profile-assignments.json`
-    const functionSecurityProfileAssignmentsPath = `${currentDraftDir}/function-profile-assignments.json`
+    await mkdirSync(config.currentDraftDirectory)
+    const tableSecurityProfilesPath = `${config.currentDraftDirectory}/table-security-profiles.json`
+    const functionSecurityProfilesPath = `${config.currentDraftDirectory}/function-security-profiles.json`
+    const roleSetFilePath = `${config.currentDraftDirectory}/roles.json`
+    const tableProfileAssignmentsPath = `${config.currentDraftDirectory}/table-profile-assignments.json`
+    const functionSecurityProfileAssignmentsPath = `${config.currentDraftDirectory}/function-profile-assignments.json`
 
     await writeFileSync(tableSecurityProfilesPath, JSON.stringify(defaultTableSecurityProfiles,null,2))
     await writeFileSync(functionSecurityProfilesPath, JSON.stringify(defaultFunctionSecurityProfiles,null,2))
@@ -100,6 +98,7 @@ async function  calcFunctionSecurityProfileAssignments(introspection:any): Promi
 }
 
 async function handler(argv) {
+  config = await loadConfig()
   await createBaseDir(argv)
 
   const introspection = await introspectDb()

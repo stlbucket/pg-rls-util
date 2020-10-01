@@ -1,9 +1,5 @@
 import {existsSync, readFileSync} from 'fs'
 import { PgrConfig, PgrFunctionSecurityProfileAssignmentSet, PgrFunctionSecurityProfileSet, PgrRoleSet, PgrSchemaTableProfileAssignmentSet, PgrTableSecurityProfileSet } from './d'
-// const dbConfigPath = `${process.cwd()}/.pgrlsgen/current-draft/db-config.json`
-// let dbConfig = {
-//   connectionString: "NO DB CONFIG"
-// }
 
 let config: PgrConfig | null = null;
 
@@ -15,23 +11,19 @@ async function loadOneConfigFile(filePath:string): Promise<any | null> {
   return JSON.parse(fileContents.toString())
 }
 
-async function loadConfig(workDir?: string): Promise<PgrConfig> {
+async function loadConfig(): Promise<PgrConfig> {
   if (config !== null) return config;
 
-  const cwd = workDir || `${process.cwd()}/.pgrlsgen/current-draft`
-
+  const baseDirectory = process.env.PGR_WORK_DIR || `${process.cwd()}/.pgrlsgen`
+  const cwd = `${baseDirectory}/current-draft`
   const rPath = `${cwd}/roles.json`
   const tpaPath = `${cwd}/table-profile-assignments.json`
   const tspPath = `${cwd}/table-security-profiles.json`
   const fpaPath = `${cwd}/function-profile-assignments.json`
   const fspPath = `${cwd}/function-security-profiles.json`
   const artifactsDirectory = `${cwd}/artifacts`
+  const releasesDirectory = `${baseDirectory}/releases`
 
-  // const dbConfigExists = await existsSync(dbConfigPath)
-  // if (dbConfigExists) {
-  //   const dbConfigContents = await readFileSync(dbConfigPath)
-  //   dbConfig = JSON.parse(dbConfigContents.toString())
-  // }
   const connectionString = process.env.PGR_DB_CONNECTION_STRING
 
   if (!connectionString) throw new Error("Environment variable PGR_DB_CONNECTION_STRING must be defined for pg-rls-util")
@@ -43,8 +35,11 @@ async function loadConfig(workDir?: string): Promise<PgrConfig> {
   const functionSecurityProfileAssignments: PgrFunctionSecurityProfileAssignmentSet[] = await loadOneConfigFile(fpaPath)
 
   config = {
+    baseDirectory: baseDirectory,
+    currentDraftDirectory: cwd,
     dbConfig: {connectionString: connectionString},
     artifactsDirectory: artifactsDirectory,
+    releasesDirectory: releasesDirectory,
     roleSet: roles,
     tableSecurityProfileSet: tableSecurityProfiles,
     tableSecurityProfileAssignments: tableSecurityProfileAssignments,
