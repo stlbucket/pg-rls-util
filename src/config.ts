@@ -32,7 +32,9 @@ async function loadConfig(workDir?: string): Promise<PgrConfig> {
   //   const dbConfigContents = await readFileSync(dbConfigPath)
   //   dbConfig = JSON.parse(dbConfigContents.toString())
   // }
-  const connectionString = process.env.PGR_DB_CONNECTION_STRING || "postgres://postgres:1234@0.0.0.0/soro_sales"
+  const connectionString = process.env.PGR_DB_CONNECTION_STRING
+
+  if (!connectionString) throw new Error("Environment variable PGR_DB_CONNECTION_STRING must be defined for pg-rls-util")
 
   const roles: PgrRoleSet = await loadOneConfigFile(rPath)
   const tableSecurityProfiles: PgrTableSecurityProfileSet = await loadOneConfigFile(tspPath)

@@ -21,13 +21,6 @@ async function  createBaseDir(argv) {
     console.log(`creating baseDir: ${baseDir}`)
 
     await mkdirSync(baseDir)
-
-    // const connectionString = argv.connectionString
-    // const dbConfigFilePath = `${currentDraftDir}/db-config.json`
-    // const defaultDbConfig: ConnectionConfig = {
-    //   connectionString: connectionString
-    // }
-    // await writeFileSync(dbConfigFilePath, JSON.stringify(defaultDbConfig,null,2))
   }
 }
 

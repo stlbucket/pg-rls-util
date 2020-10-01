@@ -27,13 +27,14 @@
     "build": "tsc -p tsconfig.release.json",
     "build:watch": "tsc -w -p tsconfig.release.json",
     "lint": "eslint . --ext .ts,.tsx",
-    "exec": "npm run build && node build/src/pg-rls-util",
+    "exec": "npm run build && node -r dotenv/config build/src/pg-rls-util",
     "test": "jest --coverage",
     "test:watch": "jest --watch"
   },
   "author": "Kevin Burkett",
   "license": "Apache-2.0",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "mustache": "^4.0.1",
     "pg": "^8.3.3",
     "tslib": "~2.0.0",
