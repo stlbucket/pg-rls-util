@@ -1,5 +1,5 @@
 import * as Mustache from 'mustache'
-import { PgrSchema } from '../../../d'
+import { PgrDbIntrospection, PgrSchema } from '../../../d'
 
 async function computeSchemaRemoveRls (schemaName: string): Promise<string> {
   return Mustache.render(
@@ -8,7 +8,7 @@ async function computeSchemaRemoveRls (schemaName: string): Promise<string> {
   )
 }
 
-async function computeRemoveRls (introspection: any): Promise<string> {
+async function computeRemoveRls (introspection: PgrDbIntrospection): Promise<string> {
   const p = introspection.schemaTree.map(
     (s: PgrSchema) => {
       return computeSchemaRemoveRls(s.schemaName)

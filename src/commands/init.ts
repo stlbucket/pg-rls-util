@@ -3,7 +3,7 @@ import defaultTableSecurityProfiles from '../default/default-table-security-prof
 import defaultFunctionSecurityProfiles from '../default/default-function-security-profiles'
 import defaultPgrRoleSet from '../default/default-role-set'
 import {introspectDb} from '../fn/introspect-db'
-import { PgrSchemaTableProfileAssignmentSet, PgrSchema, PgrTable, PgrSchemaFunctionProfileAssignmentSet } from '../d'
+import { PgrSchemaTableProfileAssignmentSet, PgrSchema, PgrTable, PgrSchemaFunctionProfileAssignmentSet, PgrDbIntrospection } from '../d'
 import {CommandBuilder} from 'yargs'
 import loadConfig from '../config'
 let config
@@ -47,7 +47,7 @@ async function  buildCurrentDraftDir(argv: any, tableProfileAssignments: PgrSche
   }
 }
 
-async function  calcTableProfileAssignments(introspection:any): Promise<PgrSchemaTableProfileAssignmentSet[]> {
+async function  calcTableProfileAssignments(introspection:PgrDbIntrospection): Promise<PgrSchemaTableProfileAssignmentSet[]> {
   const tableProfileAssignments: PgrSchemaTableProfileAssignmentSet[] = introspection.schemaTree.map(
     (s: PgrSchema) => {
       const tableAssignments = s.schemaTables.reduce(
@@ -77,11 +77,11 @@ async function  calcTableProfileAssignments(introspection:any): Promise<PgrSchem
 
 }
 
-async function  calcFunctionSecurityProfileAssignments(introspection:any): Promise<PgrSchemaFunctionProfileAssignmentSet[]> {
+async function  calcFunctionSecurityProfileAssignments(introspection: any): Promise<PgrSchemaFunctionProfileAssignmentSet[]> {
   const functionSecurityProfileAssignments: PgrSchemaFunctionProfileAssignmentSet[] = introspection.schemaTree.map(
     (s: PgrSchema) => {
       const functionAssignments = s.schemaFunctions.reduce(
-        (a: any, f:any) => {
+        (a: any, f: any) => {
           return {
             ...a,
             [f.functionName]: defaultFunctionSecurityProfiles.defaultProfileName

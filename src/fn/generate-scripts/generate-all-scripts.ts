@@ -1,3 +1,4 @@
+import { PgrDbIntrospection } from '../../d'
 import computeAllScripts from './compute/compute-all-scripts'
 import writeAllScripts from './write/write-all-scripts'
 // import generateAllTableScripts from './generate-all-table-scripts'
@@ -7,7 +8,7 @@ import writeAllScripts from './write/write-all-scripts'
 // import generateCreateRolesSql from './generate-create-roles-sql'
 // import generateSchemaUsageSql from './generate-schema-usage-sql'
 
-async function generateAllScripts(introspection: any) {
+async function generateAllScripts(introspection: PgrDbIntrospection) {
     const allScripts = await computeAllScripts(introspection)
     await writeAllScripts(allScripts)
     // const allTablesScript = await generateAllTableScripts(introspection)

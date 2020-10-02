@@ -72,7 +72,7 @@ function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTableSecu
   const rlsPolicies = Object.keys(tableSecurityProfile.policies).reduce(
     (all: any, action: string) => {
       const actionPolicies = tableSecurityProfile.policies[action].map(
-        (p:any) => {
+        (p: any) => {
           return {
             ...p
             ,roles: p.roles.join(", ")
@@ -89,7 +89,7 @@ function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTableSecu
   .reduce(  // reduce to one item per role/action
     (all: any, action: string) => {
       const actionGrants = tableSecurityProfile.grants[action].map(
-        (g:any) => {
+        (g: any) => {
           return {
             ...g
             ,action: action
@@ -103,18 +103,18 @@ function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTableSecu
   )
   .reduce(  // reduce to one role with multiple actions
     (all: any, roleGrant: any) => {
-      const finalGrant = all.find((g:any) => g.roleName === roleGrant.roleName) || {...roleGrant, grants: []}
-      const otherGrants = all.filter((g:any) => g.roleName !== roleGrant.roleName)
+      const finalGrant = all.find((g: any) => g.roleName === roleGrant.roleName) || {...roleGrant, grants: []}
+      const otherGrants = all.filter((g: any) => g.roleName !== roleGrant.roleName)
       const exclusions = roleGrant.exclusions || []
       const grantColumns = (['INSERT','UPDATE'].indexOf(roleGrant.action) > -1 ? table.tableColumns : [])
-        .map((tc:any) => tc.column_name)
+        .map((tc: any) => tc.column_name)
         .filter((c:string) => exclusions.indexOf(c) === -1)
       const grantColumnsText = grantColumns.length > 0 ? `(${grantColumns.join(', ')})` : null
       const columnExclusionsText = exclusions.length > 0 ? `\n       --  excluded columns for ${roleGrant.action}: ${exclusions.join(', ')}` : null 
 
       return [...otherGrants, {
         ...finalGrant, 
-        grants: [...finalGrant.grants.map((og:any) => { return {...og, comma: ','}}), {action: roleGrant.action, grantColumns: grantColumnsText, columnExclusionsText: columnExclusionsText}]
+        grants: [...finalGrant.grants.map((og: any) => { return {...og, comma: ','}}), {action: roleGrant.action, grantColumns: grantColumnsText, columnExclusionsText: columnExclusionsText}]
       }]
     }, []
   )
@@ -125,7 +125,7 @@ function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTableSecu
     tableName: table.tableName,
     tableSecurityProfileName: tableSecurityProfile.name,
     revokeRolesList: revokeRolesList.join(',\n       '),
-    grantRolesList: roles.dbUserRoles.map((r:any) => r.roleName).join(",\n"),
+    grantRolesList: roles.dbUserRoles.map((r: any) => r.roleName).join(",\n"),
     rlsPolicies: rlsPolicies,
     roleGrants: roleGrants
   }
@@ -224,7 +224,7 @@ async function computeAllTableScripts(introspection: PgrDbIntrospection): Promis
     }
   )
 
-  const computedMasterScriptSet = await computeAllSchemaTableScripts(config.tableSecurityProfileAssignments,mappedSecurityProfiles,config.roleSet,introspection)
+  const computedMasterScriptSet = await computeAllSchemaTableScripts(config.tableSecurityProfileAssignmentSets,mappedSecurityProfiles,config.roleSet,introspection)
 
   return computedMasterScriptSet
 }

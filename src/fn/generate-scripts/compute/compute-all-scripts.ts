@@ -3,9 +3,9 @@ import computeAllFunctionScripts from './compute-function-scripts'
 import computeOwnershipPolicy from './compute-ownership-script'
 import computeRemoveAllRls from './compute-remove-all-rls-script'
 import computeCreateRoles from './compute-create-roles-sql'
-import { PgrScriptSet } from '../../../d'
+import { PgrDbIntrospection, PgrScriptSet } from '../../../d'
 
-async function computeAllScripts(introspection: any): Promise<PgrScriptSet> {
+async function computeAllScripts(introspection: PgrDbIntrospection): Promise<PgrScriptSet> {
 
     const masterTableScriptSet = await computeAllTableScripts(introspection)
     const masterFunctionScriptSet = await computeAllFunctionScripts(introspection)

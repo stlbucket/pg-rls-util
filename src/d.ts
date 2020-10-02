@@ -90,7 +90,8 @@ export interface PgrTableAssignment {
 
 export interface PgrSchemaTableProfileAssignmentSet {
   schemaName: string,
-  tableAssignments: PgrTableAssignment
+  tableAssignments: PgrTableAssignment,
+  viewAssignments: PgrTableAssignment
 }
 
 export interface PgrFunctionAssignment {
@@ -131,8 +132,15 @@ export interface PgrConfig {
   roleSet: PgrRoleSet,
   tableSecurityProfileSet: PgrTableSecurityProfileSet,
   functionSecurityProfileSet: PgrFunctionSecurityProfileSet,
-  tableSecurityProfileAssignments: PgrSchemaTableProfileAssignmentSet[],
+  tableSecurityProfileAssignmentSets: PgrSchemaTableProfileAssignmentSet[],
   functionSecurityProfileAssignments: PgrFunctionSecurityProfileAssignmentSet[],
+}
+
+export interface PgrDiffSummary {
+  removedTableSecurityProfileAssignmentSets: PgrSchemaTableProfileAssignmentSet[],
+  addedTableSecurityProfileAssignmentSets: PgrSchemaTableProfileAssignmentSet[],
+  removedFunctionSecurityProfileAssignmentSets: PgrFunctionSecurityProfileAssignmentSet[],
+  addedFunctionSecurityProfileAssignmentSets: PgrFunctionSecurityProfileAssignmentSet[]
 }
 
 export interface PgrTableScript {

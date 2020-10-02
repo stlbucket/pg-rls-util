@@ -42,7 +42,7 @@ async function loadConfig(): Promise<PgrConfig> {
     releasesDirectory: releasesDirectory,
     roleSet: roles,
     tableSecurityProfileSet: tableSecurityProfiles,
-    tableSecurityProfileAssignments: tableSecurityProfileAssignments,
+    tableSecurityProfileAssignmentSets: tableSecurityProfileAssignments,
     functionSecurityProfileSet: functionSecurityProfiles,
     functionSecurityProfileAssignments: functionSecurityProfileAssignments
   }

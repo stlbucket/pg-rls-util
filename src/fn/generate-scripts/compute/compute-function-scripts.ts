@@ -1,6 +1,6 @@
 import * as Mustache from 'mustache'
 import loadConfig from '../../../config'
-import {PgrRoleSet, PgrFunction, PgrFunctionSecurityProfile, PgrSchema, PgrRole, PgrFunctionSecurityProfileAssignmentSet, PgrMasterFunctionScriptSet, PgrSchemaFunctionProfileAssignmentSet, PgrSchemaFunctionScriptSet, PgrFunctionScript, PgrConfig, PgrFunctionSecurityProfileSet} from "../../../d"
+import {PgrRoleSet, PgrFunction, PgrFunctionSecurityProfile, PgrSchema, PgrRole, PgrFunctionSecurityProfileAssignmentSet, PgrMasterFunctionScriptSet, PgrSchemaFunctionProfileAssignmentSet, PgrSchemaFunctionScriptSet, PgrFunctionScript, PgrConfig, PgrFunctionSecurityProfileSet, PgrDbIntrospection} from "../../../d"
 
 
 const functionPolicyTemplate = `
@@ -55,7 +55,7 @@ function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFun
 
 }
 
-async function computeSchemaFunctionScripts(schemaFunctionAssignmentSet: PgrFunctionSecurityProfileAssignmentSet, securityProfiles: PgrFunctionSecurityProfile[], roles: PgrRoleSet, introspection: any): Promise<PgrSchemaFunctionScriptSet>{
+async function computeSchemaFunctionScripts(schemaFunctionAssignmentSet: PgrFunctionSecurityProfileAssignmentSet, securityProfiles: PgrFunctionSecurityProfile[], roles: PgrRoleSet, introspection: PgrDbIntrospection): Promise<PgrSchemaFunctionScriptSet>{
   const p = Object.keys(schemaFunctionAssignmentSet.functionAssignments)
     .map(
       async (functionName: string) => {
@@ -80,7 +80,7 @@ async function computeSchemaFunctionScripts(schemaFunctionAssignmentSet: PgrFunc
     }
   }
 
-async function computeAllSchemaFunctionScripts(functionSecurityProfileAssignments: PgrSchemaFunctionProfileAssignmentSet[], securityProfiles: PgrFunctionSecurityProfile[], roleSet: PgrRoleSet, introspection: any): Promise<PgrMasterFunctionScriptSet> {
+async function computeAllSchemaFunctionScripts(functionSecurityProfileAssignments: PgrSchemaFunctionProfileAssignmentSet[], securityProfiles: PgrFunctionSecurityProfile[], roleSet: PgrRoleSet, introspection: PgrDbIntrospection): Promise<PgrMasterFunctionScriptSet> {
   const p = functionSecurityProfileAssignments
   .map(
     async (schemaAssignments: PgrSchemaFunctionProfileAssignmentSet) => {
@@ -95,7 +95,7 @@ async function computeAllSchemaFunctionScripts(functionSecurityProfileAssignment
   }
 }
 
-async function computeAllFunctionScripts(introspection: any): Promise<PgrMasterFunctionScriptSet>{
+async function computeAllFunctionScripts(introspection: PgrDbIntrospection): Promise<PgrMasterFunctionScriptSet>{
   const config: PgrConfig = await loadConfig()
 
   const functionSecurityProfileSet: PgrFunctionSecurityProfileSet = config.functionSecurityProfileSet

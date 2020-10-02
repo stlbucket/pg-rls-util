@@ -30,7 +30,7 @@ async function computeSchemaUsageSql () {
 
   const revokeRolesList = ['public', ...config.roleSet.dbUserRoles.map((r:PgrRole) => r.roleName)].join(',\n       ')
 
-  const schemata = config.tableSecurityProfileAssignments
+  const schemata = config.tableSecurityProfileAssignmentSets
   .map(
     (tpaSet: PgrSchemaTableProfileAssignmentSet) => {
       const grantRolesList = Array.from(new Set(Object.values(tpaSet.tableAssignments)))

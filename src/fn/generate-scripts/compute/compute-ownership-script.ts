@@ -1,5 +1,5 @@
 import * as Mustache from 'mustache'
-import { PgrSchema } from '../../../d';
+import { PgrDbIntrospection, PgrSchema } from '../../../d';
 import loadConfig from '../../../config'
 
 const ownershipPolicyTemplate = `
@@ -27,7 +27,7 @@ const ownershipPolicyTemplate = `
 --==
 `
 
-async function computeOwnershipPolicy (introspection: any) {
+async function computeOwnershipPolicy (introspection: PgrDbIntrospection) {
   const config = await loadConfig()
 
   const sortedSchemata = introspection.schemaTree
