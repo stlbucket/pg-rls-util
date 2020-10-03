@@ -1,9 +1,9 @@
 import yargs = require('yargs');
-import init from './commands/init'
-import generate from './commands/generate'
-import release from './commands/release'
+import init from './commands/init/init'
+import generate from './commands/generate/generate'
+import release from './commands/release/release'
 import diff from './commands/diff/diff'
-import merge from './commands/merge'
+import merge from './commands/merge/merge'
 
 export async function run() {
   yargs

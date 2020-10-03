@@ -2,7 +2,7 @@ import { writeFileSync } from 'fs'
 import {CommandBuilder} from 'yargs'
 import loadConfig from '../../config'
 import { PgrConfig, PgrDbIntrospection, PgrDiffSummary, PgrSchemaFunctionProfileAssignmentSet, PgrSchemaTableProfileAssignmentSet } from '../../d'
-import {introspectDb} from '../../fn/introspect-db'
+import {introspectDb} from '../../introspect-db'
 
 import findRemovedTables from './findRemovedTables'
 import findAddedTables from './findAddedTables'
