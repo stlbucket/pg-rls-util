@@ -1,8 +1,9 @@
 import { writeFileSync } from 'fs'
+import loadConfig from '../../../config'
 
 async function writeRemoveAllRlsPolicy (allScripts: string) {
-  const removeAllRlsPath = `${process.cwd()}/.pgrlsgen/current-draft/artifacts/remove-all-rls.sql`
-  await writeFileSync(removeAllRlsPath, allScripts)
+  const config = await loadConfig()
+  await writeFileSync(config.artifactPaths.removeAllRlsPath, allScripts)
 }
 
 export default writeRemoveAllRlsPolicy

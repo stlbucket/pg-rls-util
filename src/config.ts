@@ -1,7 +1,36 @@
 import {existsSync, readFileSync} from 'fs'
-import { PgrConfig, PgrFunctionSecurityProfileAssignmentSet, PgrFunctionSecurityProfileSet, PgrRoleSet, PgrSchemaTableProfileAssignmentSet, PgrTableSecurityProfileSet } from './d'
+import { PgrConfig, PgrDiffSummary, PgrFunctionSecurityProfileAssignmentSet, PgrFunctionSecurityProfileSet, PgrRoleSet, PgrSchemaTableProfileAssignmentSet, PgrTableSecurityProfileSet } from './d'
+
+const baseDirectory = process.env.PGR_WORK_DIR || `${process.cwd()}/.pgrlsgen`
+const currentDraftDirectory = `${baseDirectory}/current-draft`
+const artifactsDirectory = `${currentDraftDirectory}/artifacts`
+const releasesDirectory = `${baseDirectory}/releases`
+const roleSetPath = `${currentDraftDirectory}/roles.json`
+const tableProfileAssignmentsPath = `${currentDraftDirectory}/table-profile-assignments.json`
+const tableProfileAssignmentsStagedPath = `${currentDraftDirectory}/table-profile-assignments-staged.json`
+const tableSecurityProfilesPath = `${currentDraftDirectory}/table-security-profiles.json`
+const functionProfileAssignmentsPath = `${currentDraftDirectory}/function-profile-assignments.json`
+const functionProfileAssignmentsStagedPath = `${currentDraftDirectory}/function-profile-assignments-staged.json`
+const functionSecurityProfilesPath = `${currentDraftDirectory}/function-security-profiles.json`
+const currentDiffPath = `${currentDraftDirectory}/current-diff.json`
+const createRolesPath = `${artifactsDirectory}/createRoles.sql`
+const ownershipPath = `${artifactsDirectory}/ownership.sql`
+const removeAllRlsPath = `${artifactsDirectory}/remove-all-rls.sql`
+const schemaUsageSqlPath = `${artifactsDirectory}/schema-usage.sql`
+const oneScriptToRuleThemAllPath = `${artifactsDirectory}/one-script-to-rule-them-all.sql`
+
+const connectionString = process.env.PGR_DB_CONNECTION_STRING
+
+if (!connectionString) throw new Error("Environment variable PGR_DB_CONNECTION_STRING must be defined for pg-rls-util")
 
 let config: PgrConfig | null = null;
+
+const defaultDiff: PgrDiffSummary = {
+  tableSecurityRemovals: [],
+  tableSecurityAdditions: [],
+  functionSecurityRemovals: [],
+  functionSecurityAdditions: [],
+}
 
 async function loadOneConfigFile(filePath:string): Promise<any | null> {
   const fileExists = await existsSync(filePath)
@@ -14,29 +43,16 @@ async function loadOneConfigFile(filePath:string): Promise<any | null> {
 async function loadConfig(): Promise<PgrConfig> {
   if (config !== null) return config;
 
-  const baseDirectory = process.env.PGR_WORK_DIR || `${process.cwd()}/.pgrlsgen`
-  const cwd = `${baseDirectory}/current-draft`
-  const rPath = `${cwd}/roles.json`
-  const tpaPath = `${cwd}/table-profile-assignments.json`
-  const tspPath = `${cwd}/table-security-profiles.json`
-  const fpaPath = `${cwd}/function-profile-assignments.json`
-  const fspPath = `${cwd}/function-security-profiles.json`
-  const artifactsDirectory = `${cwd}/artifacts`
-  const releasesDirectory = `${baseDirectory}/releases`
-
-  const connectionString = process.env.PGR_DB_CONNECTION_STRING
-
-  if (!connectionString) throw new Error("Environment variable PGR_DB_CONNECTION_STRING must be defined for pg-rls-util")
-
-  const roles: PgrRoleSet = await loadOneConfigFile(rPath)
-  const tableSecurityProfiles: PgrTableSecurityProfileSet = await loadOneConfigFile(tspPath)
-  const functionSecurityProfiles: PgrFunctionSecurityProfileSet = await loadOneConfigFile(fspPath)
-  const tableSecurityProfileAssignments: PgrSchemaTableProfileAssignmentSet[] = await loadOneConfigFile(tpaPath)
-  const functionSecurityProfileAssignments: PgrFunctionSecurityProfileAssignmentSet[] = await loadOneConfigFile(fpaPath)
+  const roles: PgrRoleSet = await loadOneConfigFile(roleSetPath)
+  const tableSecurityProfiles: PgrTableSecurityProfileSet = await loadOneConfigFile(tableSecurityProfilesPath)
+  const functionSecurityProfiles: PgrFunctionSecurityProfileSet = await loadOneConfigFile(functionSecurityProfilesPath)
+  const tableSecurityProfileAssignments: PgrSchemaTableProfileAssignmentSet[] = await loadOneConfigFile(tableProfileAssignmentsPath)
+  const functionSecurityProfileAssignments: PgrFunctionSecurityProfileAssignmentSet[] = await loadOneConfigFile(functionProfileAssignmentsPath)
+  const currentDiff: PgrDiffSummary = await loadOneConfigFile(currentDiffPath)
 
   config = {
     baseDirectory: baseDirectory,
-    currentDraftDirectory: cwd,
+    currentDraftDirectory: currentDraftDirectory,
     dbConfig: {connectionString: connectionString},
     artifactsDirectory: artifactsDirectory,
     releasesDirectory: releasesDirectory,
@@ -44,7 +60,23 @@ async function loadConfig(): Promise<PgrConfig> {
     tableSecurityProfileSet: tableSecurityProfiles,
     tableSecurityProfileAssignmentSets: tableSecurityProfileAssignments,
     functionSecurityProfileSet: functionSecurityProfiles,
-    functionSecurityProfileAssignments: functionSecurityProfileAssignments
+    functionSecurityProfileAssignments: functionSecurityProfileAssignments,
+    currentDiff: currentDiff || defaultDiff,
+    artifactPaths: {
+      tableProfileAssignmentsPath: tableProfileAssignmentsPath,
+      tableProfileAssignmentsStagedPath: tableProfileAssignmentsStagedPath,
+      tableSecurityProfilesPath: tableSecurityProfilesPath,
+      functionProfileAssignmentsPath: functionProfileAssignmentsPath,
+      functionProfileAssignmentsStagedPath: functionProfileAssignmentsStagedPath,
+      functionSecurityProfilesPath: functionSecurityProfilesPath,
+      currentDiffPath: currentDiffPath,
+      roleSetPath: roleSetPath,
+      createRolesPath: createRolesPath,
+      ownershipPath: ownershipPath,
+      removeAllRlsPath: removeAllRlsPath,
+      oneScriptToRuleThemAllPath: oneScriptToRuleThemAllPath,
+      schemaUsageSqlPath: schemaUsageSqlPath
+    }
   }
 
   return config

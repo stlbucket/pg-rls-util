@@ -1,9 +1,9 @@
 import { writeFileSync } from 'fs';
-
+import loadConfig from '../../../config'
 
 async function writeSchemaUsageSql(schemaUsageSql: string) {
-  const schemaUsageSqlPath = `${process.cwd()}/.pgrlsgen/current-draft/artifacts/schema-usage.sql`
-  await writeFileSync(schemaUsageSqlPath, schemaUsageSql)
+  const config = await loadConfig()
+  await writeFileSync(config.artifactPaths.schemaUsageSqlPath, schemaUsageSql)
 }
 
 export default writeSchemaUsageSql

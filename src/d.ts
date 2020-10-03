@@ -134,13 +134,31 @@ export interface PgrConfig {
   functionSecurityProfileSet: PgrFunctionSecurityProfileSet,
   tableSecurityProfileAssignmentSets: PgrSchemaTableProfileAssignmentSet[],
   functionSecurityProfileAssignments: PgrFunctionSecurityProfileAssignmentSet[],
+  currentDiff: PgrDiffSummary,
+  artifactPaths: PgrArtifactPathSet
+}
+
+export interface PgrArtifactPathSet {
+  tableProfileAssignmentsPath: string,
+  tableProfileAssignmentsStagedPath: string,
+  tableSecurityProfilesPath: string,
+  functionProfileAssignmentsPath: string,
+  functionProfileAssignmentsStagedPath: string,
+  functionSecurityProfilesPath: string,
+  currentDiffPath: string,
+  roleSetPath: string,
+  oneScriptToRuleThemAllPath: string,
+  createRolesPath: string,
+  ownershipPath: string,
+  removeAllRlsPath: string,
+  schemaUsageSqlPath: string
 }
 
 export interface PgrDiffSummary {
-  removedTableSecurityProfileAssignmentSets: PgrSchemaTableProfileAssignmentSet[],
-  addedTableSecurityProfileAssignmentSets: PgrSchemaTableProfileAssignmentSet[],
-  removedFunctionSecurityProfileAssignmentSets: PgrFunctionSecurityProfileAssignmentSet[],
-  addedFunctionSecurityProfileAssignmentSets: PgrFunctionSecurityProfileAssignmentSet[]
+  tableSecurityRemovals: PgrSchemaTableProfileAssignmentSet[],
+  tableSecurityAdditions: PgrSchemaTableProfileAssignmentSet[],
+  functionSecurityRemovals: PgrFunctionSecurityProfileAssignmentSet[],
+  functionSecurityAdditions: PgrFunctionSecurityProfileAssignmentSet[]
 }
 
 export interface PgrTableScript {

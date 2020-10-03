@@ -2,7 +2,8 @@ import yargs = require('yargs');
 import init from './commands/init'
 import generate from './commands/generate'
 import release from './commands/release'
-import diff from './commands/diff'
+import diff from './commands/diff/diff'
+import merge from './commands/merge'
 
 export async function run() {
   yargs
@@ -10,13 +11,7 @@ export async function run() {
   .command(generate)
   .command(release)
   .command(diff)
-  .command('merge', 'merge existing table and function assignment sets with diff results', 
-    {
-    }, 
-    (argv) => {
-      console.log('merge', argv)
-    }
-  )
+  .command(merge)
   .argv;
 }
 

@@ -1,9 +1,9 @@
 import { writeFileSync } from 'fs';
-
+import loadConfig from '../../../config'
 
 async function writeOwnershipPolicy(ownershipPolicy: string) {
-  const ownershipPolicyPath = `${process.cwd()}/.pgrlsgen/current-draft/artifacts/ownership.sql`
-  await writeFileSync(ownershipPolicyPath, ownershipPolicy)
+  const config = await loadConfig()
+  await writeFileSync(config.artifactPaths.ownershipPath, ownershipPolicy)
 }
 
 export default writeOwnershipPolicy

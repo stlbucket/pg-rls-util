@@ -22,7 +22,7 @@ ${allFunctionsScript}
     await writeOwnershipPolicy(scriptSet.ownershipScript)
     await writeRemoveAllRls(scriptSet.removeAllRlsScript)
 
-    await writeFileSync(`${config.artifactsDirectory}/one-script-to-rule-them-all.sql`, oneScriptToRuleThemAll)
+    await writeFileSync(config.artifactPaths.oneScriptToRuleThemAllPath, oneScriptToRuleThemAll)
 }
 
 export default writeAllScripts

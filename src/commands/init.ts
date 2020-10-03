@@ -3,10 +3,10 @@ import defaultTableSecurityProfiles from '../default/default-table-security-prof
 import defaultFunctionSecurityProfiles from '../default/default-function-security-profiles'
 import defaultPgrRoleSet from '../default/default-role-set'
 import {introspectDb} from '../fn/introspect-db'
-import { PgrSchemaTableProfileAssignmentSet, PgrSchema, PgrTable, PgrSchemaFunctionProfileAssignmentSet, PgrDbIntrospection } from '../d'
+import { PgrSchemaTableProfileAssignmentSet, PgrSchema, PgrTable, PgrSchemaFunctionProfileAssignmentSet, PgrDbIntrospection, PgrConfig } from '../d'
 import {CommandBuilder} from 'yargs'
 import loadConfig from '../config'
-let config
+let config: PgrConfig
 
 async function  createBaseDir(argv) {
   if (argv.forceAll) {
@@ -31,17 +31,11 @@ async function  buildCurrentDraftDir(argv: any, tableProfileAssignments: PgrSche
   const currentDraftDirExists = await existsSync(config.currentDraftDirectory)
   if (!currentDraftDirExists) {
     await mkdirSync(config.currentDraftDirectory)
-    const tableSecurityProfilesPath = `${config.currentDraftDirectory}/table-security-profiles.json`
-    const functionSecurityProfilesPath = `${config.currentDraftDirectory}/function-security-profiles.json`
-    const roleSetFilePath = `${config.currentDraftDirectory}/roles.json`
-    const tableProfileAssignmentsPath = `${config.currentDraftDirectory}/table-profile-assignments.json`
-    const functionSecurityProfileAssignmentsPath = `${config.currentDraftDirectory}/function-profile-assignments.json`
-
-    await writeFileSync(tableSecurityProfilesPath, JSON.stringify(defaultTableSecurityProfiles,null,2))
-    await writeFileSync(functionSecurityProfilesPath, JSON.stringify(defaultFunctionSecurityProfiles,null,2))
-    await writeFileSync(roleSetFilePath, JSON.stringify(defaultPgrRoleSet,null,2))
-    await writeFileSync(tableProfileAssignmentsPath, JSON.stringify(tableProfileAssignments,null,2))
-    await writeFileSync(functionSecurityProfileAssignmentsPath, JSON.stringify(functionSecurityProfileAssignments,null,2))
+    await writeFileSync(config.artifactPaths.tableSecurityProfilesPath, JSON.stringify(defaultTableSecurityProfiles,null,2))
+    await writeFileSync(config.artifactPaths.functionSecurityProfilesPath, JSON.stringify(defaultFunctionSecurityProfiles,null,2))
+    await writeFileSync(config.artifactPaths.roleSetPath, JSON.stringify(defaultPgrRoleSet,null,2))
+    await writeFileSync(config.artifactPaths.tableProfileAssignmentsPath, JSON.stringify(tableProfileAssignments,null,2))
+    await writeFileSync(config.artifactPaths.functionProfileAssignmentsPath, JSON.stringify(functionSecurityProfileAssignments,null,2))
   } else {
     console.log('current-draft already exists.  use -f or -x options to force re-init')
   }
