@@ -1,25 +1,7 @@
 import * as Mustache from 'mustache'
 import loadConfig from '../../../../config'
 import {PgrRoleSet, PgrFunction, PgrFunctionSecurityProfile, PgrSchema, PgrRole, PgrFunctionSecurityProfileAssignmentSet, PgrMasterFunctionScriptSet, PgrSchemaFunctionProfileAssignmentSet, PgrSchemaFunctionScriptSet, PgrFunctionScript, PgrConfig, PgrFunctionSecurityProfileSet, PgrDbIntrospection} from "../../../../d"
-
-
-const functionPolicyTemplate = `
-----------
-----------  BEGIN FUNCTION POLICY: {{schemaName}}.{{functionName}}
-----------  POLICY NAME:  {{policyName}}
-----------
-
-----------  REMOVE EXISTING FUNCTION GRANTS
-  revoke all privileges on function {{functionSignature}} from {{revokeRolesList}};
-
-{{#roleGrant}}
-----------  CREATE NEW FUNCTION GRANTS
-----------  {{roles}}
-  grant execute on function {{functionSignature}} to {{roles}};  
-{{/roleGrant}}
-----------  END FUNCTION POLICY: {{schemaName}}.{{functionName}}
---==
-  `
+let config: PgrConfig
 
 function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFunctionSecurityProfile, roles: PgrRoleSet) {
   const schemaName = fn.functionSchema
@@ -49,7 +31,7 @@ function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFun
   }
 
   return Mustache.render(
-    functionPolicyTemplate,
+    config.scriptTemplates.functionPolicyTemplate,
     templateVariables
   )
 
@@ -96,7 +78,7 @@ async function computeAllSchemaFunctionScripts(functionSecurityProfileAssignment
 }
 
 async function computeAllFunctionScripts(introspection: PgrDbIntrospection): Promise<PgrMasterFunctionScriptSet>{
-  const config: PgrConfig = await loadConfig()
+  config = await loadConfig()
 
   const functionSecurityProfileSet: PgrFunctionSecurityProfileSet = config.functionSecurityProfileSet
 

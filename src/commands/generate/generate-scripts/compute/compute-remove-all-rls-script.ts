@@ -1,14 +1,17 @@
 import * as Mustache from 'mustache'
-import { PgrDbIntrospection, PgrSchema } from '../../../../d'
+import { PgrConfig, PgrDbIntrospection, PgrSchema } from '../../../../d'
+import loadConfig from '../../../../config'
+let config: PgrConfig
 
-async function computeSchemaRemoveRls (schemaName: string): Promise<string> {
+async function computeSchemaRemoveRls (schemaName: string): Promise<string> {  
   return Mustache.render(
-    removeAllRlsScriptTemplate,
+    config.scriptTemplates.removeAllRlsScriptTemplate,
     { schemaName: schemaName }
   )
 }
 
 async function computeRemoveRls (introspection: PgrDbIntrospection): Promise<string> {
+  config = await loadConfig()
   const p = introspection.schemaTree.map(
     (s: PgrSchema) => {
       return computeSchemaRemoveRls(s.schemaName)
@@ -20,28 +23,3 @@ async function computeRemoveRls (introspection: PgrDbIntrospection): Promise<str
 }
 
 export default computeRemoveRls
-
-const removeAllRlsScriptTemplate = `
-----------
-----------  remove all rls policies for schema: {{schemaName}}
-----------
-DO
-$body$
-  DECLARE 
-    _pol pg_policies;
-    _drop_sql text;
-  BEGIN
-
-    for _pol in
-      select 
-        *
-      from pg_policies
-      where schemaname = '{{schemaName}}'
-    loop
-      _drop_sql := 'drop policy if exists ' || _pol.policyname || ' on ' || _pol.schemaname || '.' || _pol.tablename || ';';
-      execute _drop_sql;
-    end loop
-    ;
-  END
-$body$;
-`

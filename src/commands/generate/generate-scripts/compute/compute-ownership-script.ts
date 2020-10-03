@@ -2,31 +2,6 @@ import * as Mustache from 'mustache'
 import { PgrDbIntrospection, PgrSchema } from '../../../../d';
 import loadConfig from '../../../../config'
 
-const ownershipPolicyTemplate = `
-----------
-----------  BEGIN OWNERSHIP SQL
-----------
-  
-
-{{#schemata}}
-----------  SCHEMA: {{schemaName}}
-  ALTER SCHEMA {{schemaName}} OWNER TO {{dbOwnerRole}};
-  -- tables
-  {{#schemaTables}}
-    ALTER TABLE {{schemaName}}.{{tableName}} OWNER TO {{dbOwnerRole}};
-  {{/schemaTables}}
-  -- functions
-  {{#schemaFunctions}}
-    ALTER FUNCTION {{schemaName}}.{{functionName}}({{argumentDataTypes}}) OWNER TO {{dbOwnerRole}};
-  {{/schemaFunctions}}
-----------  END SCHEMA: {{schemaName}}
-{{/schemata}}
-----------
-----------  END OWNERSHIP SQL
-----------
---==
-`
-
 async function computeOwnershipPolicy (introspection: PgrDbIntrospection) {
   const config = await loadConfig()
 
@@ -50,7 +25,7 @@ async function computeOwnershipPolicy (introspection: PgrDbIntrospection) {
   })
 
   return Mustache.render(
-    ownershipPolicyTemplate,
+    config.scriptTemplates.ownershipPolicyTemplate,
     {
       schemata: sortedSchemata,
       dbOwnerRole: config.roleSet.dbOwnerRole.roleName

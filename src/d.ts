@@ -135,7 +135,8 @@ export interface PgrConfig {
   tableSecurityProfileAssignmentSets: PgrSchemaTableProfileAssignmentSet[],
   functionSecurityProfileAssignments: PgrFunctionSecurityProfileAssignmentSet[],
   currentDiff: PgrDiffSummary,
-  artifactPaths: PgrArtifactPathSet
+  artifactPaths: PgrArtifactPathSet,
+  scriptTemplates: PgrScriptTemplateSet
 }
 
 export interface PgrArtifactPathSet {
@@ -145,6 +146,7 @@ export interface PgrArtifactPathSet {
   functionProfileAssignmentsPath: string,
   functionProfileAssignmentsStagedPath: string,
   functionSecurityProfilesPath: string,
+  scriptTemplatesPath: string,
   currentDiffPath: string,
   roleSetPath: string,
   oneScriptToRuleThemAllPath: string,
@@ -205,4 +207,12 @@ export interface PgrDbIntrospection {
   existingPolicies: any,
   existingPolicyTemplates: any,
   enabledRoles: any
+}
+
+export interface PgrScriptTemplateSet {
+  functionPolicyTemplate: string,
+  ownershipPolicyTemplate: string,
+  removeAllRlsScriptTemplate: string,
+  schemaUsageSqlTemplate: string,
+  tablePolicyTemplate: string
 }

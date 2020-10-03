@@ -2,29 +2,6 @@ import * as Mustache from 'mustache'
 import loadConfig from "../../../../config"
 import { PgrRole, PgrRoleGrant, PgrSchemaTableProfileAssignmentSet, PgrTableSecurityProfile } from '../../../../d'
 
-const schemaUsageSqlTemplate = `
-----------
-----------  BEGIN SCHEMA USAGE SQL
-----------
-
-REVOKE USAGE ON SCHEMA public FROM PUBLIC;
-
-GRANT USAGE ON SCHEMA public TO {{dbAuthenticatorRole}};
-
-{{#schemata}}
-------- {{schemaName}}
-  REVOKE USAGE ON SCHEMA {{schemaName}} FROM {{revokeRolesList}};
-
-  {{#showGrants}}
-  GRANT USAGE ON SCHEMA {{schemaName}} TO {{grantRolesList}};
-  {{/showGrants}}
-{{/schemata}}
-----------
-----------  END SCHEMA USAGE SQL
-----------
---==
-`
-
 async function computeSchemaUsageSql () {
   const config = await loadConfig()
 
@@ -62,7 +39,7 @@ async function computeSchemaUsageSql () {
 )
 
   return Mustache.render(
-    schemaUsageSqlTemplate,
+    config.scriptTemplates.schemaUsageSqlTemplate,
     {
       schemata: schemata,
       dbAuthenticatorRole: config.roleSet.dbAuthenticatorRole.roleName,

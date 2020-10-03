@@ -2,69 +2,8 @@ import loadConfig from '../../../../config'
 import { PgrTable, PgrTableSecurityProfile, PgrRoleSet, PgrRole, PgrMasterTableScriptSet, PgrSchema, PgrSchemaTableProfileAssignmentSet, PgrSchemaTableScriptSet, PgrTableScript, ColumnExclusionSet, PgrConfig, PgrRoleGrant, PgrTableSecurityProfileSet, PgrDbIntrospection } from '../../../../d'
 
 import * as Mustache from 'mustache'
+let config: PgrConfig
 
-const tablePolicyTemplate = `
-----******
-----******  BEGIN TABLE POLICY: {{schemaName}}.{{tableName}}
-----******  TABLE SECURITY PROFILE:  {{tableSecurityProfileName}}
-----******
-----------  REMOVE EXISTING TABLE GRANTS
-  revoke all privileges on table {{schemaName}}.{{tableName}} 
-  from {{revokeRolesList}}
-  ;
-
-----------  REMOVE EXISTING RLS POLICIES
-DO
-$body$
-  DECLARE 
-    _pol pg_policies;
-    _drop_sql text;
-  BEGIN
-
-    for _pol in
-      select 
-        *
-      from pg_policies
-      where schemaname = '{{schemaName}}'
-      and tablename = '{{tableName}}'
-    loop
-      _drop_sql := 'drop policy if exists ' || _pol.policyname || ' on ' || _pol.schemaname || '.' || _pol.tablename || ';';
-      execute _drop_sql;
-    end loop
-    ;
-  END
-$body$;
-
-
-{{#enableRls}}
-----------  ENABLE ROW LEVEL SECURITY: {{schemaName}}.{{tableName}}
-  alter table {{schemaName}}.{{tableName}} enable row level security;
-
-{{#rlsPolicies}}
-  drop policy if exists {{policyname}} on {{schemaName}}.{{tableName}};
-  create policy {{policyname}} on {{schemaName}}.{{tableName}} as {{permissive}} for {{cmd}} to {{roles}}{{#qual}} using ({{qual}}){{/qual}}{{#with_check}} with check ({{with_check}}){{/with_check}};
-{{/rlsPolicies}}
-{{/enableRls}}
-{{^enableRls}}
-----------  DISABLE ROW LEVEL SECURITY: {{schemaName}}.{{tableName}}
-  alter table {{schemaName}}.{{tableName}} disable row level security;
-{{/enableRls}}
-
-----------  CREATE NEW TABLE GRANTS: {{schemaName}}.{{tableName}}
-{{#roleGrants}}
-
-----------  {{roleName}}
-  grant 
-  {{#grants}}
-    {{action}} {{grantColumns}}{{comma}} {{columnExclusionsText}}
-  {{/grants}}
-  on table {{schemaName}}.{{tableName}} to {{roleName}};
-
-{{/roleGrants}}
-
-----======  END TABLE POLICY: {{schemaName}}.{{tableName}}
---==
-  `
 
 function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTableSecurityProfile, roles: PgrRoleSet) {
   const revokeRolesList = ['public', ...roles.dbUserRoles.map((r:PgrRole) => r.roleName)]
@@ -131,7 +70,7 @@ function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTableSecu
   }
 
   return Mustache.render(
-    tablePolicyTemplate,
+    config.scriptTemplates.tablePolicyTemplate,
     templateVariables
   )
 
@@ -214,7 +153,7 @@ function mapSecurityProfile(
 }
 
 async function computeAllTableScripts(introspection: PgrDbIntrospection): Promise<PgrMasterTableScriptSet>{
-  const config: PgrConfig = await loadConfig()
+  config = await loadConfig()
 
   const tableSecurityProfileSet: PgrTableSecurityProfileSet = config.tableSecurityProfileSet
 

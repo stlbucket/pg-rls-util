@@ -3,8 +3,6 @@ import loadConfig from '../../../../config'
 import writeDirectories from './write-directories'
 import writeAllTableScripts from './write-table-scripts'
 import writeAllFunctionScripts from './write-function-scripts'
-import writeOwnershipPolicy from './write-ownership-policy'
-import writeRemoveAllRls from './write-remove-all-rls'
 import { PgrScriptSet } from '../../../../d'
 
 async function writeAllScripts(scriptSet: PgrScriptSet) {
@@ -19,8 +17,9 @@ ${allTablesScript}
 
 ${allFunctionsScript}
 `
-    await writeOwnershipPolicy(scriptSet.ownershipScript)
-    await writeRemoveAllRls(scriptSet.removeAllRlsScript)
+    await writeFileSync(config.artifactPaths.ownershipPath, scriptSet.ownershipScript)
+    await writeFileSync(config.artifactPaths.removeAllRlsPath, scriptSet.removeAllRlsScript)
+    await writeFileSync(config.artifactPaths.createRolesPath, scriptSet.createRolesScript)
 
     await writeFileSync(config.artifactPaths.oneScriptToRuleThemAllPath, oneScriptToRuleThemAll)
 }

@@ -1,5 +1,5 @@
 import {existsSync, readFileSync} from 'fs'
-import { PgrConfig, PgrDiffSummary, PgrFunctionSecurityProfileAssignmentSet, PgrFunctionSecurityProfileSet, PgrRoleSet, PgrSchemaTableProfileAssignmentSet, PgrTableSecurityProfileSet } from './d'
+import { PgrConfig, PgrDiffSummary, PgrFunctionSecurityProfileAssignmentSet, PgrFunctionSecurityProfileSet, PgrRoleSet, PgrSchemaTableProfileAssignmentSet, PgrScriptTemplateSet, PgrTableSecurityProfileSet } from './d'
 
 const baseDirectory = process.env.PGR_WORK_DIR || `${process.cwd()}/.pgrlsgen`
 const currentDraftDirectory = `${baseDirectory}/current-draft`
@@ -12,8 +12,9 @@ const tableSecurityProfilesPath = `${currentDraftDirectory}/table-security-profi
 const functionProfileAssignmentsPath = `${currentDraftDirectory}/function-profile-assignments.json`
 const functionProfileAssignmentsStagedPath = `${currentDraftDirectory}/function-profile-assignments-staged.json`
 const functionSecurityProfilesPath = `${currentDraftDirectory}/function-security-profiles.json`
+const scriptTemplatesPath = `${currentDraftDirectory}/script-templates.json`
 const currentDiffPath = `${currentDraftDirectory}/current-diff.json`
-const createRolesPath = `${artifactsDirectory}/createRoles.sql`
+const createRolesPath = `${artifactsDirectory}/create-roles.sql`
 const ownershipPath = `${artifactsDirectory}/ownership.sql`
 const removeAllRlsPath = `${artifactsDirectory}/remove-all-rls.sql`
 const schemaUsageSqlPath = `${artifactsDirectory}/schema-usage.sql`
@@ -48,6 +49,7 @@ async function loadConfig(): Promise<PgrConfig> {
   const functionSecurityProfiles: PgrFunctionSecurityProfileSet = await loadOneConfigFile(functionSecurityProfilesPath)
   const tableSecurityProfileAssignments: PgrSchemaTableProfileAssignmentSet[] = await loadOneConfigFile(tableProfileAssignmentsPath)
   const functionSecurityProfileAssignments: PgrFunctionSecurityProfileAssignmentSet[] = await loadOneConfigFile(functionProfileAssignmentsPath)
+  const scriptTemplates: PgrScriptTemplateSet = await loadOneConfigFile(scriptTemplatesPath)
   const currentDiff: PgrDiffSummary = await loadOneConfigFile(currentDiffPath)
 
   config = {
@@ -69,6 +71,7 @@ async function loadConfig(): Promise<PgrConfig> {
       functionProfileAssignmentsPath: functionProfileAssignmentsPath,
       functionProfileAssignmentsStagedPath: functionProfileAssignmentsStagedPath,
       functionSecurityProfilesPath: functionSecurityProfilesPath,
+      scriptTemplatesPath: scriptTemplatesPath,
       currentDiffPath: currentDiffPath,
       roleSetPath: roleSetPath,
       createRolesPath: createRolesPath,
@@ -76,7 +79,8 @@ async function loadConfig(): Promise<PgrConfig> {
       removeAllRlsPath: removeAllRlsPath,
       oneScriptToRuleThemAllPath: oneScriptToRuleThemAllPath,
       schemaUsageSqlPath: schemaUsageSqlPath
-    }
+    },
+    scriptTemplates: scriptTemplates
   }
 
   return config
