@@ -7,17 +7,13 @@ import diff from './commands/diff'
 import merge from './commands/merge'
 
 export async function run() {
-  try {
-    yargs
-    .command(init)
-    .command(generate)
-    .command(release)
-    .command(diff)
-    .command(merge)
-    .help()
-    .argv;  
-  } catch (e) {
-    console.error(e)
-    process.exit()
-  }
+  yargs
+  .command(init)
+  .command(generate)
+  .command(release)
+  .command(diff)
+  .command(merge)
+  .demandCommand()
+  .help()
+  .argv;
 }

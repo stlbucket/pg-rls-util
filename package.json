@@ -15,7 +15,7 @@
     "node": ">= 12.13 <13"
   },
   "bin": {
-    "pg-rls-util": "./build/src/pg-rls-util.js"
+    "pg-rls-util": "./pg-rls-util"
   },
   "devDependencies": {
     "@types/jest": "~26.0.5",
@@ -43,7 +43,7 @@
     "build": "tsc -p tsconfig.release.json",
     "build:watch": "tsc -w -p tsconfig.release.json",
     "lint": "eslint . --ext .ts,.tsx",
-    "exec": "npm run build && node -r dotenv/config main",
+    "exec": "npm run build && node -r dotenv/config pg-rls-util",
     "test": "jest --coverage",
     "test:watch": "jest --watch"
   },

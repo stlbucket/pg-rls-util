@@ -1,4 +1,4 @@
-import { run } from '../src/pg-rls-util';
+import { run } from '../src/main';
 
 describe('greeter function', () => {
   let result: any;

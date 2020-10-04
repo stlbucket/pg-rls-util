@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+const PgRlsUtil = require('./build/src/pg-rls-util')
+
+try {
+  PgRlsUtil.run()
+} catch (e) {
+  console.error(e)
+  process.exit(5678)
+}
