@@ -83,7 +83,7 @@ async function mergeFunctionSecurity(config: PgrConfig) : Promise<PgrSchemaFunct
 
 async function handler(argv) {
   if (argv.connectionString) process.env.PGR_DB_CONNECTION_STRING = argv.connectionString
-  const config: PgrConfig = await loadConfig()
+  const config: PgrConfig = await loadConfig(argv)
   const mergedTableSecurity = await mergeTableSecurity(config)
   const mergedFunctionSecurity = await mergeFunctionSecurity(config)
 
@@ -104,6 +104,7 @@ const command = 'merge'
 const aliases = 'm'
 const describe = 'merge current-diff into table and function assignments, removing and adding entries as appropriate.'
 const builder: CommandBuilder = {
+  c: { type: 'string', alias: 'connectionString', description: 'a postgres connection string that will define/override PGR_DB_CONNECTION_STRING env variable'},
 }
 const deprecated = false
 

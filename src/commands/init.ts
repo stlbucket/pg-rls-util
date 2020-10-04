@@ -12,7 +12,7 @@ import calcFunctionSecurityProfileAssignments from './init/calcFunctionSecurityP
 
 async function handler(argv) {
   if (argv.connectionString) process.env.PGR_DB_CONNECTION_STRING = argv.connectionString
-  config = await loadConfig()
+  config = await loadConfig(argv)
   await createBaseDir(argv, config)
 
   const introspection = await introspectDb()

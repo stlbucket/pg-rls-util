@@ -38,8 +38,9 @@ async function loadOneConfigFile(filePath:string): Promise<any | null> {
   return JSON.parse(fileContents.toString())
 }
 
-async function loadConfig(): Promise<PgrConfig> {
+async function loadConfig(argv?: any): Promise<PgrConfig> {
   if (config !== null) return config;
+  if (!argv) throw new Error('Initial config load must include argv parameter')
 
   const connectionString = process.env.PGR_DB_CONNECTION_STRING
 
@@ -57,6 +58,7 @@ async function loadConfig(): Promise<PgrConfig> {
   const currentDiff: PgrDiffSummary = await loadOneConfigFile(currentDiffPath)
 
   config = {
+    argv: argv,
     baseDirectory: baseDirectory,
     currentDraftDirectory: currentDraftDirectory,
     dbConfig: {connectionString: connectionString},

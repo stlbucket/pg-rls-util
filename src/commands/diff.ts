@@ -12,7 +12,7 @@ import findAddedFunctions from './diff/findAddedFunctions'
 
 async function handler(argv) {
   if (argv.connectionString) process.env.PGR_DB_CONNECTION_STRING = argv.connectionString
-  const config: PgrConfig = await loadConfig()
+  const config: PgrConfig = await loadConfig(argv)
   const dbIntrospection = await introspectDb()
 
   const removedTableSecurityProfileAssignmentSets = await findRemovedTables(config, dbIntrospection)
@@ -37,6 +37,7 @@ const command = 'diff'
 const aliases = 'd'
 const describe = 'examine differences between current draft assignments and db introspection'
 const builder: CommandBuilder = {
+  c: { type: 'string', alias: 'connectionString', description: 'a postgres connection string that will define/override PGR_DB_CONNECTION_STRING env variable'},
 }
 const deprecated = false
 

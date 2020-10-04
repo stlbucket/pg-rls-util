@@ -132,6 +132,7 @@ export interface PgrConnectionInfo {
 }
 
 export interface PgrConfig {
+  argv: any,
   dbConfig: ConnectionConfig,
   baseDirectory: string,
   currentDraftDirectory: string,

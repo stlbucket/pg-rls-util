@@ -10,7 +10,7 @@ let config: PgrConfig
 
 async function handler(argv) {
   if (argv.connectionString) process.env.PGR_DB_CONNECTION_STRING = argv.connectionString
-  config = await loadConfig()
+  config = await loadConfig(argv)
 
   const releasesDirExists = await existsSync(config.releasesDirectory)
   if (!releasesDirExists) {
@@ -32,6 +32,7 @@ const command = 'release'
 const aliases = 'r'
 const describe = 'copy current-draft dir to a new release dir'
 const builder: CommandBuilder = {
+  c: { type: 'string', alias: 'connectionString', description: 'a postgres connection string that will define/override PGR_DB_CONNECTION_STRING env variable'},
 }
 const deprecated = false
 
