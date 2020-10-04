@@ -1,17 +1,13 @@
-  import {mkdirSync, rmdirSync, existsSync, writeFileSync} from 'fs'
-import defaultTableSecurityProfiles from '../../default/default-table-security-profiles'
-import defaultFunctionSecurityProfiles from '../../default/default-function-security-profiles'
-import defaultPgrRoleSet from '../../default/default-role-set'
-import {introspectDb} from '../../introspect-db'
-import { PgrSchemaTableProfileAssignmentSet, PgrSchema, PgrTable, PgrSchemaFunctionProfileAssignmentSet, PgrDbIntrospection, PgrConfig } from '../../d'
+import {introspectDb} from '../introspect-db'
+import { PgrConfig } from '../d'
 import {CommandBuilder} from 'yargs'
-import loadConfig from '../../config'
+import loadConfig from '../config'
 let config: PgrConfig
 
-import createBaseDir from './createBaseDir'
-import buildCurrentDraftDir from './buildCurrentDraftDir'
-import calcTableProfileAssignments from './calcTableProfileAssignments'
-import calcFunctionSecurityProfileAssignments from './calcFunctionSecurityProfileAssignments'
+import createBaseDir from './init/createBaseDir'
+import buildCurrentDraftDir from './init/buildCurrentDraftDir'
+import calcTableProfileAssignments from './init/calcTableProfileAssignments'
+import calcFunctionSecurityProfileAssignments from './init/calcFunctionSecurityProfileAssignments'
 
 
 async function handler(argv) {

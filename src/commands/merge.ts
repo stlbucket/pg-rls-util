@@ -1,7 +1,7 @@
 import { writeFileSync, unlinkSync, existsSync } from 'fs'
 import {CommandBuilder} from 'yargs'
-import loadConfig from '../../config'
-import { PgrConfig, PgrSchemaFunctionProfileAssignmentSet, PgrSchemaTableProfileAssignmentSet } from '../../d'
+import loadConfig from '../config'
+import { PgrConfig, PgrSchemaFunctionProfileAssignmentSet, PgrSchemaTableProfileAssignmentSet } from '../d'
 
 async function mergeTableSecurity(config: PgrConfig) : Promise<PgrSchemaTableProfileAssignmentSet[]> {
   const currentTableSecurity = config.tableSecurityProfileAssignmentSets

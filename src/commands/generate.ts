@@ -1,5 +1,5 @@
-import {introspectDb} from '../../introspect-db'
-import generateAllScripts from './generate-scripts/generate-all-scripts'
+import {introspectDb} from '../introspect-db'
+import generateAllScripts from './generate/generate-scripts/generate-all-scripts'
 import {CommandBuilder} from 'yargs'
 
 async function handler() {    

@@ -3,8 +3,8 @@ import {mkdirSync, existsSync, readdirSync} from 'fs'
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-import loadConfig from '../../config'
-import { PgrConfig } from '../../d';
+import loadConfig from '../config'
+import { PgrConfig } from '../d';
 
 let config: PgrConfig
 

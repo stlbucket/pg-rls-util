@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import yargs = require('yargs');
 import init from './commands/init/init'
-import generate from './commands/generate/generate'
-import release from './commands/release/release'
-import diff from './commands/diff/diff'
-import merge from './commands/merge/merge'
+import generate from './commands/generate'
+import release from './commands/release'
+import diff from './commands/diff'
+import merge from './commands/merge'
 
 export async function run() {
   try {
@@ -14,6 +14,7 @@ export async function run() {
     .command(release)
     .command(diff)
     .command(merge)
+    .help()
     .argv;  
   } catch (e) {
     console.error(e)

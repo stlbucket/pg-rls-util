@@ -1,13 +1,13 @@
 import { writeFileSync } from 'fs'
 import {CommandBuilder} from 'yargs'
-import loadConfig from '../../config'
-import { PgrConfig, PgrDbIntrospection, PgrDiffSummary, PgrSchemaFunctionProfileAssignmentSet, PgrSchemaTableProfileAssignmentSet } from '../../d'
-import {introspectDb} from '../../introspect-db'
+import loadConfig from '../config'
+import { PgrConfig, PgrDiffSummary } from '../d'
+import {introspectDb} from '../introspect-db'
 
-import findRemovedTables from './findRemovedTables'
-import findAddedTables from './findAddedTables'
-import findRemovedFunctions from './findRemovedFunctions'
-import findAddedFunctions from './findAddedFunctions'
+import findRemovedTables from './diff/findRemovedTables'
+import findAddedTables from './diff/findAddedTables'
+import findRemovedFunctions from './diff/findRemovedFunctions'
+import findAddedFunctions from './diff/findAddedFunctions'
 
 
 async function handler() {
