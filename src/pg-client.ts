@@ -1,5 +1,6 @@
 const { Pool } = require('pg')
 import loadConfig from "./config"
+import { PgrConnectionInfo } from './d'
 
 const userTable = 'soro_auth.soro_user'
 let pool: any
@@ -46,14 +47,14 @@ const becomeUser = async (username: string) => {
   return user
 };
 
-const connectionInfo = async () => {
+const getConnectionInfo = async (): Promise<PgrConnectionInfo> => {
   const config = await loadConfig()
   const connectionString = config.dbConfig.connectionString
   if (!connectionString) throw new Error('config.connectionString required')
   const dbUser = connectionString.split('://')[1].split(':')[0]
   const dbPassword = connectionString.split('://')[1].split(':')[1].split('@')[0]
   const dbName = connectionString.split('://')[1].split('/')[1]
-  const dbHost = connectionString.split('://')[1].split('@')[1].split(':')[0]
+  const dbHost = connectionString.split('://')[1].split('@')[1].split(':')[0].split('/')[0]
   const dbPort = connectionString.split('://')[1].split('@')[1].split('/')[0].split(':')[1]
   
   return {
@@ -62,11 +63,12 @@ const connectionInfo = async () => {
     ,dbName: dbName
     ,dbHost: dbHost
     ,dbPort: dbPort
+    ,dbConnectionString: connectionString
   }
 }
 
 export {
-  connectionInfo
+  getConnectionInfo
   ,doQuery
   ,findUser
   ,becomeUser

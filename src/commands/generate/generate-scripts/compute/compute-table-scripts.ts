@@ -5,7 +5,7 @@ import * as Mustache from 'mustache'
 let config: PgrConfig
 
 
-function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTableSecurityProfile, roles: PgrRoleSet) {
+function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTableSecurityProfile, roles: PgrRoleSet, dropExistingRls = false): string {
   const revokeRolesList = ['public', ...roles.dbUserRoles.map((r:PgrRole) => r.roleName)]
 
   const rlsPolicies = Object.keys(tableSecurityProfile.policies).reduce(
@@ -66,7 +66,8 @@ function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTableSecu
     revokeRolesList: revokeRolesList.join(',\n       '),
     grantRolesList: roles.dbUserRoles.map((r: any) => r.roleName).join(",\n"),
     rlsPolicies: rlsPolicies,
-    roleGrants: roleGrants
+    roleGrants: roleGrants,
+    dropExistingRls: dropExistingRls
   }
 
   return Mustache.render(
@@ -76,9 +77,21 @@ function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTableSecu
 
 }
 
-async function computeSchemaTableScripts(schemaTableAssignmentSet: PgrSchemaTableProfileAssignmentSet, securityProfiles: PgrTableSecurityProfile[], roles: PgrRoleSet, introspection: PgrDbIntrospection):  Promise<PgrSchemaTableScriptSet>{
+function computeTableRemoveRls (table: PgrTable): string {
+
+  const templateVariables = {
+    schemaName: table.schemaName,
+    tableName: table.tableName
+  }
+
+  return Mustache.render(
+    config.scriptTemplates.dropExistingRlsPoliciesTemplate,
+    templateVariables
+  )
+}
+
+async function computeSchemaTableScripts(schemaTableAssignmentSet: PgrSchemaTableProfileAssignmentSet, securityProfiles: PgrTableSecurityProfile[], roles: PgrRoleSet, introspection: PgrDbIntrospection, dropExistingRls = false):  Promise<PgrSchemaTableScriptSet>{
   const p = Object.keys(schemaTableAssignmentSet.tableAssignments)
-  // const p = ['contact']
     .map(
       async (tableName: string): Promise<PgrTableScript> => {
         const table = introspection.schemaTree
@@ -86,38 +99,36 @@ async function computeSchemaTableScripts(schemaTableAssignmentSet: PgrSchemaTabl
           .find((t: PgrTable) => t.tableName === tableName)
         const securityProfile = securityProfiles.find((sp: PgrTableSecurityProfile) => sp.name === schemaTableAssignmentSet.tableAssignments[tableName])
         if (!securityProfile) throw new Error(`No securityProfile: ${schemaTableAssignmentSet.tableAssignments[tableName]}`)
-        const tableScript = await computeTablePolicy(table, securityProfile, roles)
+        const tableScript = await computeTablePolicy(table, securityProfile, roles, dropExistingRls)
+        const removeRlsScript = await computeTableRemoveRls(table)
+
         return {
           tableSchema: schemaTableAssignmentSet.schemaName,
           tableName: tableName,
-          tableScript: tableScript
+          tableScript: tableScript,
+          tableRemoveRlsScript: removeRlsScript          
         }
       }
     )
   const tableScripts: PgrTableScript[] = await Promise.all(p)
 
-  const allInOneScript = tableScripts.map(ts => ts.tableScript).join('\n')
   return {
     schemaName: schemaTableAssignmentSet.schemaName,
-    allTablesInOneScript: allInOneScript,
     tableScripts: tableScripts
   }
 }
 
-async function computeAllSchemaTableScripts(tableSecurityProfileAssignments: PgrSchemaTableProfileAssignmentSet[], mappedSecurityProfiles: PgrTableSecurityProfile[], roleSet: PgrRoleSet, introspection: PgrDbIntrospection): Promise<PgrMasterTableScriptSet> {
+async function computeAllSchemaTableScripts(tableSecurityProfileAssignments: PgrSchemaTableProfileAssignmentSet[], mappedSecurityProfiles: PgrTableSecurityProfile[], roleSet: PgrRoleSet, introspection: PgrDbIntrospection, dropExistingRls = false): Promise<PgrMasterTableScriptSet> {
   const p = tableSecurityProfileAssignments
-  // .filter(s => s.schemaName === 'soro')
   .map(
     async (schemaAssignments: PgrSchemaTableProfileAssignmentSet) => {      
-      const schemaTableScriptSet = await computeSchemaTableScripts(schemaAssignments, mappedSecurityProfiles, roleSet, introspection)
+      const schemaTableScriptSet = await computeSchemaTableScripts(schemaAssignments, mappedSecurityProfiles, roleSet, introspection, dropExistingRls)
       return schemaTableScriptSet
     }
   );
 
   const schemaTableScriptSets = await Promise.all(p)
-  const allInOneScript = schemaTableScriptSets.map(tss => tss.allTablesInOneScript).join('\n')
   return {
-    allTablesInOneScript: allInOneScript,
     schemaTableScriptSets: schemaTableScriptSets
   }
 }
@@ -152,9 +163,8 @@ function mapSecurityProfile(
   }
 }
 
-async function computeAllTableScripts(introspection: PgrDbIntrospection): Promise<PgrMasterTableScriptSet>{
+async function computeAllTableScripts(introspection: PgrDbIntrospection, dropExistingRls = false): Promise<PgrMasterTableScriptSet>{
   config = await loadConfig()
-
   const tableSecurityProfileSet: PgrTableSecurityProfileSet = config.tableSecurityProfileSet
 
   const mappedSecurityProfiles: PgrTableSecurityProfile[] = tableSecurityProfileSet.tableSecurityProfiles.map(
@@ -163,7 +173,7 @@ async function computeAllTableScripts(introspection: PgrDbIntrospection): Promis
     }
   )
 
-  const computedMasterScriptSet = await computeAllSchemaTableScripts(config.tableSecurityProfileAssignmentSets,mappedSecurityProfiles,config.roleSet,introspection)
+  const computedMasterScriptSet = await computeAllSchemaTableScripts(config.tableSecurityProfileAssignmentSets,mappedSecurityProfiles,config.roleSet,introspection, dropExistingRls)
 
   return computedMasterScriptSet
 }

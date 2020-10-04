@@ -8,20 +8,7 @@ const roleSet: PgrRoleSet = {
   },
   "dbAuthenticatorRole": {
     "roleName": "postgres",
-    "applicableRoles": [
-      {
-        "roleName": "soro_super_admin"
-      },
-      {
-        "roleName": "soro_admin"
-      },
-      {
-        "roleName": "soro_user"
-      },
-      {
-        "roleName": "soro_anonymous"
-      }
-    ]
+    "applicableRoles": [ "soro_admin", "soro_user","soro_anonymous" ]
   },
   "dbUserRoles": [
     {

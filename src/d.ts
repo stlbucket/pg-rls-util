@@ -2,7 +2,7 @@ import { ConnectionConfig } from 'pg';
 
 export interface PgrRole {
   roleName: string,
-  applicableRoles?: PgrRole[]
+  applicableRoles?: string[]
 }
 
 export interface PgrTable {
@@ -31,8 +31,7 @@ export interface PgrRoleSet {
   name: string,
   dbOwnerRole: PgrRole,
   dbAuthenticatorRole: PgrRole,
-  dbUserRoles: PgrRole[],
-  dbAnonymousRole?: PgrRole
+  dbUserRoles: PgrRole[]
 }
 
 export interface PgrRoleGrant {
@@ -123,6 +122,15 @@ export interface PgrFunctionSecurityProfileAssignmentSet {
   functionAssignments: any
 }
 
+export interface PgrConnectionInfo {
+  dbUser: string
+  ,dbPassword: string
+  ,dbName: string
+  ,dbHost: string
+  ,dbPort: string
+  ,dbConnectionString: string
+}
+
 export interface PgrConfig {
   dbConfig: ConnectionConfig,
   baseDirectory: string,
@@ -166,17 +174,16 @@ export interface PgrDiffSummary {
 export interface PgrTableScript {
   tableSchema: string,
   tableName: string,
-  tableScript: string
+  tableScript: string,
+  tableRemoveRlsScript: string
 }
 
 export interface PgrSchemaTableScriptSet {
   schemaName: string,
-  allTablesInOneScript: string
   tableScripts: PgrTableScript[]
 }
 
 export interface PgrMasterTableScriptSet {
-  allTablesInOneScript: string,
   schemaTableScriptSets: PgrSchemaTableScriptSet[]
 }
 
@@ -195,6 +202,7 @@ export interface PgrMasterFunctionScriptSet {
 }
 
 export interface PgrScriptSet {
+  masterTableScriptSetRemoveRls: PgrMasterTableScriptSet,
   masterTableScriptSet: PgrMasterTableScriptSet,
   masterFunctionScriptSet: PgrMasterFunctionScriptSet,
   ownershipScript: string,
@@ -214,5 +222,7 @@ export interface PgrScriptTemplateSet {
   ownershipPolicyTemplate: string,
   removeAllRlsScriptTemplate: string,
   schemaUsageSqlTemplate: string,
-  tablePolicyTemplate: string
+  tablePolicyTemplate: string,
+  rolesTemplate: string,
+  dropExistingRlsPoliciesTemplate: string
 }

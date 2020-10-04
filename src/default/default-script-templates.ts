@@ -90,6 +90,30 @@ GRANT USAGE ON SCHEMA public TO {{dbAuthenticatorRole}};
 ----------
 --==
 `,
+  dropExistingRlsPoliciesTemplate: `
+  ----------  REMOVE EXISTING RLS POLICIES
+  DO
+  $body$
+    DECLARE 
+      _pol pg_policies;
+      _drop_sql text;
+    BEGIN
+  
+      for _pol in
+        select 
+          *
+        from pg_policies
+        where schemaname = '{{schemaName}}'
+        and tablename = '{{tableName}}'
+      loop
+        _drop_sql := 'drop policy if exists ' || _pol.policyname || ' on ' || _pol.schemaname || '.' || _pol.tablename || ';';
+        execute _drop_sql;
+      end loop
+      ;
+    END
+  $body$;
+  
+`,
   tablePolicyTemplate: `
 ----******
 ----******  BEGIN TABLE POLICY: {{schemaName}}.{{tableName}}
@@ -99,29 +123,6 @@ GRANT USAGE ON SCHEMA public TO {{dbAuthenticatorRole}};
   revoke all privileges on table {{schemaName}}.{{tableName}} 
   from {{revokeRolesList}}
   ;
-
-----------  REMOVE EXISTING RLS POLICIES
-DO
-$body$
-  DECLARE 
-    _pol pg_policies;
-    _drop_sql text;
-  BEGIN
-
-    for _pol in
-      select 
-        *
-      from pg_policies
-      where schemaname = '{{schemaName}}'
-      and tablename = '{{tableName}}'
-    loop
-      _drop_sql := 'drop policy if exists ' || _pol.policyname || ' on ' || _pol.schemaname || '.' || _pol.tablename || ';';
-      execute _drop_sql;
-    end loop
-    ;
-  END
-$body$;
-
 
 {{#enableRls}}
 ----------  ENABLE ROW LEVEL SECURITY: {{schemaName}}.{{tableName}}
@@ -151,7 +152,78 @@ $body$;
 
 ----======  END TABLE POLICY: {{schemaName}}.{{tableName}}
 --==
-  `
+`,
+  rolesTemplate: `
+------------  DB OWNER ROLE ------------
+DO
+$body$
+BEGIN
+  IF NOT EXISTS (
+    SELECT    *
+    FROM   pg_catalog.pg_roles
+    WHERE  rolname = '{{dbOwnerRole.roleName}}'
+  )
+  THEN
+    CREATE ROLE {{dbOwnerRole.roleName}};
+  END IF;
+
+  ALTER ROLE {{dbOwnerRole.roleName}} with LOGIN;
+  ALTER ROLE {{dbOwnerRole.roleName}} with CREATEDB;
+
+END
+$body$;
+--||--
+---------- END DB OWNER ROLE -----------
+
+------------  DB AUTHENTICATOR ROLE ------------
+DO
+$body$
+BEGIN
+  IF NOT EXISTS (
+    SELECT    *
+    FROM   pg_catalog.pg_roles
+    WHERE  rolname = '{{dbAuthenticatorRole.roleName}}')
+  THEN
+    CREATE ROLE {{dbAuthenticatorRole.roleName}};
+  END IF;
+
+ALTER ROLE {{dbAuthenticatorRole.roleName}} with LOGIN;
+ALTER ROLE {{dbAuthenticatorRole.roleName}} with NOINHERIT;
+
+{{#dbUserRoles}}
+GRANT {{roleName}} TO {{dbAuthenticatorRole.roleName}};
+{{/dbUserRoles}}
+END
+$body$;
+--||--
+---------- END DB AUTHENTICATOR ROLE -----------
+
+---------- DB USER ROLES -----------
+{{#dbUserRoles}}
+
+    ------------ {{roleName}}
+      DO
+      $body$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT    *
+          FROM   pg_catalog.pg_roles
+          WHERE  rolname = '{{roleName}}'
+        ) THEN
+          CREATE ROLE {{roleName}};
+        END IF;
+
+        ALTER ROLE {{roleName}} with NOLOGIN;
+        {{#applicableRoles}}
+        GRANT {{.}} TO {{roleName}};
+        {{/applicableRoles}}
+      END
+      $body$;
+      --||--
+    -------- END {{roleName}}
+{{/dbUserRoles}}
+---------- END USER ROLES ----------
+`
 }
 
 export default scriptTemplates
