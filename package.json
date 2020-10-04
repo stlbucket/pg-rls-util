@@ -1,8 +1,10 @@
 {
   "name": "pg-rls-util",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A tool to generate postgres row-level-security policies.",
-  "keywords": ["cli"],
+  "keywords": [
+    "cli"
+  ],
   "homepage": "https://github.com/stlbucket/pg-rls-util",
   "repository": {
     "type": "git",
@@ -33,7 +35,9 @@
     "tsutils": "~3.17.0",
     "typescript": "~3.9.7"
   },
-  "files": ["build"],
+  "files": [
+    "build"
+  ],
   "scripts": {
     "clean": "rimraf coverage build tmp",
     "build": "tsc -p tsconfig.release.json",
