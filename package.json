@@ -1,6 +1,6 @@
 {
   "name": "pg-rls-util",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A tool to generate postgres row-level-security policies.",
   "keywords": ["cli"],
   "homepage": "https://github.com/stlbucket/pg-rls-util",
@@ -13,7 +13,7 @@
     "node": ">= 12.13 <13"
   },
   "bin": {
-    "pg-rls-util": "./build/pg-rls-util.js"
+    "pg-rls-util": "./build/src/pg-rls-util.js"
   },
   "devDependencies": {
     "@types/jest": "~26.0.5",
