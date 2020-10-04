@@ -1,3 +1,3 @@
-import run from './build/src/pg-rls-util'
+const run = require('./build/src/pg-rls-util')
 
 run()
