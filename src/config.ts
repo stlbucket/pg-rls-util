@@ -20,9 +20,6 @@ const removeAllRlsPath = `${artifactsDirectory}/remove-all-rls.sql`
 const schemaUsageSqlPath = `${artifactsDirectory}/schema-usage.sql`
 const oneScriptToRuleThemAllPath = `${artifactsDirectory}/one-script-to-rule-them-all.sql`
 
-const connectionString = process.env.PGR_DB_CONNECTION_STRING
-
-if (!connectionString) throw new Error("Environment variable PGR_DB_CONNECTION_STRING must be defined for pg-rls-util")
 
 let config: PgrConfig | null = null;
 
@@ -43,6 +40,10 @@ async function loadOneConfigFile(filePath:string): Promise<any | null> {
 
 async function loadConfig(): Promise<PgrConfig> {
   if (config !== null) return config;
+
+  const connectionString = process.env.PGR_DB_CONNECTION_STRING
+
+  if (!connectionString) throw new Error("Environment variable PGR_DB_CONNECTION_STRING must be defined for pg-rls-util")
 
   const roles: PgrRoleSet = await loadOneConfigFile(roleSetPath)
   const tableSecurityProfiles: PgrTableSecurityProfileSet = await loadOneConfigFile(tableSecurityProfilesPath)
