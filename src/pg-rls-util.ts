@@ -14,5 +14,3 @@ export async function run() {
   .command(merge)
   .argv;
 }
-
-run()
