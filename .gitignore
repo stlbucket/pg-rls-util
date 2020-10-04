@@ -33,3 +33,5 @@ build/
 /checkpoint
 
 .env
+
+publish.sh

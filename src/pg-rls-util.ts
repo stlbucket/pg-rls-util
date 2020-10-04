@@ -6,11 +6,16 @@ import diff from './commands/diff/diff'
 import merge from './commands/merge/merge'
 
 export async function run() {
-  yargs
-  .command(init)
-  .command(generate)
-  .command(release)
-  .command(diff)
-  .command(merge)
-  .argv;
+  try {
+    yargs
+    .command(init)
+    .command(generate)
+    .command(release)
+    .command(diff)
+    .command(merge)
+    .argv;  
+  } catch (e) {
+    console.error(e)
+    process.exit()
+  }
 }
