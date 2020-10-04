@@ -2,7 +2,8 @@ import {introspectDb} from '../introspect-db'
 import generateAllScripts from './generate/generate-scripts/generate-all-scripts'
 import {CommandBuilder} from 'yargs'
 
-async function handler() {    
+async function handler(argv) {
+  if (argv.connectionString) process.env.PGR_DB_CONNECTION_STRING = argv.connectionString
   const introspection = await introspectDb()
   await generateAllScripts(introspection)
 

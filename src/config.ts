@@ -43,7 +43,10 @@ async function loadConfig(): Promise<PgrConfig> {
 
   const connectionString = process.env.PGR_DB_CONNECTION_STRING
 
-  if (!connectionString) throw new Error("Environment variable PGR_DB_CONNECTION_STRING must be defined for pg-rls-util")
+  if (!connectionString) {
+    console.error("Environment variable PGR_DB_CONNECTION_STRING must be defined for pg-rls-util.  you can also use the --connectionString flag.")
+    process.exit(1)
+  }
 
   const roles: PgrRoleSet = await loadOneConfigFile(roleSetPath)
   const tableSecurityProfiles: PgrTableSecurityProfileSet = await loadOneConfigFile(tableSecurityProfilesPath)

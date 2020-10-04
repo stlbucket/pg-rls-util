@@ -6,9 +6,10 @@ import { getConnectionInfo } from '../../../../pg-client'
 
 const tableFullSqlTemplate = `
 -- to run this sql:
---                       psql -h {{{dbHost}}} -U {{{dbUser}}} -d {{dbName}} -f {{{tableScriptPath}}}
+--                       
+-- psql -h {{{dbHost}}} -U {{{dbUser}}} -d {{dbName}} -f {{{tableScriptPath}}}
 
--- this script is meant to give a quick view of the before and after state for table:  {{ts.schemaName}}.{{ts.tableName}}
+-- this script is meant to give a quick view of the before and after state for table:  {{ts.tableSchema}}.{{ts.tableName}}
 begin;
 \\dp+ {{ts.tableSchema}}.{{ts.tableName}};
 

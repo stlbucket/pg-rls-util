@@ -10,7 +10,8 @@ import findRemovedFunctions from './diff/findRemovedFunctions'
 import findAddedFunctions from './diff/findAddedFunctions'
 
 
-async function handler() {
+async function handler(argv) {
+  if (argv.connectionString) process.env.PGR_DB_CONNECTION_STRING = argv.connectionString
   const config: PgrConfig = await loadConfig()
   const dbIntrospection = await introspectDb()
 

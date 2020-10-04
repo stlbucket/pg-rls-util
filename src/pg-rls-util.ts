@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import yargs = require('yargs');
-import init from './commands/init/init'
+import init from './commands/init'
 import generate from './commands/generate'
 import release from './commands/release'
 import diff from './commands/diff'

@@ -8,7 +8,8 @@ import { PgrConfig } from '../d';
 
 let config: PgrConfig
 
-async function handler() {
+async function handler(argv) {
+  if (argv.connectionString) process.env.PGR_DB_CONNECTION_STRING = argv.connectionString
   config = await loadConfig()
 
   const releasesDirExists = await existsSync(config.releasesDirectory)
