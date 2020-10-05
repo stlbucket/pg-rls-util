@@ -1,47 +1,16 @@
-// import { PgrRoleSet } from "../d"
 import soroAnon from './profile-sets/soro-anon/role-set'
+import graphileStarter from './profile-sets/graphile-starter/role-set'
+import { PgrRoleSet } from '../d'
 
-// const defaultPgrRoleSet: PgrRoleSet = {
-//   "name": "soro-anon",
-//   "dbOwnerRole": {
-//     "roleName": "soro",
-//     "applicableRoles": []
-//   },
-//   "dbAuthenticatorRole": {
-//     "roleName": "postgres",
-//     "applicableRoles": [
-//       {
-//         "roleName": "soro_super_admin"
-//       },
-//       {
-//         "roleName": "soro_admin"
-//       },
-//       {
-//         "roleName": "soro_user"
-//       },
-//       {
-//         "roleName": "soro_anonymous"
-//       }
-//     ]
-//   },
-//   "dbUserRoles": [
-//     {
-//       "roleName": "soro_super_admin",
-//       "applicableRoles": []
-//     },
-//     {
-//       "roleName": "soro_admin",
-//       "applicableRoles": []
-//     },
-//     {
-//       "roleName": "soro_user",
-//       "applicableRoles": []
-//     },
-//     {
-//       "roleName": "soro_anonymous",
-//       "applicableRoles": []
-//     }
-//   ]
-// }
+async function getDefaultRoleSetSecurityProfiles(key: string): Promise<PgrRoleSet> {
+  switch (key) {
+    case 'soro-anon':
+      return soroAnon
+    case 'graphile-starter':
+      return graphileStarter
+    default:
+      return graphileStarter
+  }
+}
 
-export default soroAnon
+export default getDefaultRoleSetSecurityProfiles

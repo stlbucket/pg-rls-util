@@ -11,7 +11,8 @@ const tableFullSqlTemplate = `
 
 -- this script is meant to give a quick view of the before and after state for table:  {{ts.tableSchema}}.{{ts.tableName}}
 begin;
-\\dp+ {{ts.tableSchema}}.{{ts.tableName}};
+\\d+ {{ts.tableSchema}}.{{ts.tableName}}
+\\dp+ {{ts.tableSchema}}.{{ts.tableName}}
 
 {{{ts.tableRemoveRlsScript}}}
 
@@ -46,8 +47,8 @@ async function writeSchemaTableScripts(tableScriptSet: PgrSchemaTableScriptSet):
             tableScriptPath: tableScriptPath
           }
         )
-        
-        await writeFileSync(tableScriptPath, fileContents)
+        console.log(fileContents.split('&#x3D;').join('='))
+        await writeFileSync(tableScriptPath, fileContents.split('&#x3D;').join('='))
       }
     )
   await Promise.all(p)

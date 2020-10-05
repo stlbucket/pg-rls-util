@@ -1,14 +1,16 @@
-import defaultTableSecurityProfiles from '../../default/default-table-security-profiles'
-import { PgrSchemaTableProfileAssignmentSet, PgrSchema, PgrTable, PgrDbIntrospection } from '../../d'
+import { PgrSchemaTableProfileAssignmentSet, PgrSchema, PgrTable, PgrDbIntrospection, PgrConfig } from '../../d'
+import loadConfig from '../../config'
+let config: PgrConfig
 
 async function  calcTableProfileAssignments(introspection:PgrDbIntrospection): Promise<PgrSchemaTableProfileAssignmentSet[]> {
+  config = await loadConfig()
   const tableProfileAssignments: PgrSchemaTableProfileAssignmentSet[] = introspection.schemaTree.map(
     (s: PgrSchema) => {
       const tableAssignments = s.schemaTables.reduce(
         (a: any, t:PgrTable) => {
           return {
             ...a,
-            [t.tableName]: defaultTableSecurityProfiles.defaultProfileName
+            [t.tableName]: config.tableSecurityProfileSet.defaultProfileName
           }
         }, {}
       )
@@ -16,7 +18,7 @@ async function  calcTableProfileAssignments(introspection:PgrDbIntrospection): P
         (a: any, t:PgrTable) => {
           return {
             ...a,
-            [t.tableName]: defaultTableSecurityProfiles.defaultProfileName
+            [t.tableName]: config.tableSecurityProfileSet.defaultProfileName
           }
         }, {}
       )

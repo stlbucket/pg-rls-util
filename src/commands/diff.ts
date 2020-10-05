@@ -12,6 +12,7 @@ import findAddedFunctions from './diff/findAddedFunctions'
 
 async function handler(argv) {
   if (argv.connectionString) process.env.PGR_DB_CONNECTION_STRING = argv.connectionString
+  if (argv.schemata) process.env.PGR_SCHEMATA = argv.schemata
   const config: PgrConfig = await loadConfig(argv)
   const dbIntrospection = await introspectDb()
 
@@ -38,6 +39,7 @@ const aliases = 'd'
 const describe = 'examine differences between current draft assignments and db introspection'
 const builder: CommandBuilder = {
   c: { type: 'string', alias: 'connectionString', description: 'a postgres connection string that will define/override PGR_DB_CONNECTION_STRING env variable'},
+  s: { type: 'string', alias: 'schemata', description: 'a comma-delimited string of databse schemas to work with'}
 }
 const deprecated = false
 

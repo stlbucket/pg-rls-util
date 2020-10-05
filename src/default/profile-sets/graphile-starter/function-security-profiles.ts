@@ -1,18 +1,18 @@
 import { PgrFunctionSecurityProfileSet } from "../../../d"
 
 const functionSecurityProfileSet: PgrFunctionSecurityProfileSet = {
-  "defaultProfileName": "super-admin-execute",
+  "defaultProfileName": "graphile-visitor-execute",
   "functionSecurityProfiles": [
     {
-      "name": "super-admin-execute",
+      "name": "graphile-starter-execute",
       "grants": {
-        "EXECUTE": ["soro_super_admin"],
+        "EXECUTE": ["graphile_starter"],
       }
     },
     {
-      "name": "user-execute",
+      "name": "graphile-visitor-execute",
       "grants": {
-        "EXECUTE": ["soro-user"],
+        "EXECUTE": ["graphile_visitor"],
       }
     }
   ]

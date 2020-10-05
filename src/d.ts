@@ -134,6 +134,7 @@ export interface PgrConnectionInfo {
 export interface PgrConfig {
   argv: any,
   dbConfig: ConnectionConfig,
+  schemata: string,
   baseDirectory: string,
   currentDraftDirectory: string,
   artifactsDirectory: string,

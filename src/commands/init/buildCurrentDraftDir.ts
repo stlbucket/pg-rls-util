@@ -1,7 +1,7 @@
 import {mkdirSync, rmdirSync, existsSync, writeFileSync} from 'fs'
-import defaultTableSecurityProfiles from '../../default/default-table-security-profiles'
-import defaultFunctionSecurityProfiles from '../../default/default-function-security-profiles'
-import defaultPgrRoleSet from '../../default/default-role-set'
+import getDefaultTableSecurityProfiles from '../../default/default-table-security-profiles'
+import getDefaultFunctionSecurityProfiles from '../../default/default-function-security-profiles'
+import getDefaultPgrRoleSet from '../../default/default-role-set'
 import defaultScriptTemplates from '../../default/default-script-templates'
 import { PgrSchemaTableProfileAssignmentSet, PgrSchemaFunctionProfileAssignmentSet, PgrConfig } from '../../d'
 
@@ -14,10 +14,15 @@ async function  buildCurrentDraftDir(argv: any, config: PgrConfig, tableProfileA
 
   const currentDraftDirExists = await existsSync(config.currentDraftDirectory)
   if (!currentDraftDirExists) {
+    const defaultPgrRoleSet = await getDefaultPgrRoleSet(argv.roleSet)
+    const defaultTableSecurityProfiles = await getDefaultTableSecurityProfiles(argv.roleSet)
+    const defaultFunctionSecurityProfiles = await getDefaultFunctionSecurityProfiles(argv.roleSet)
+
     await mkdirSync(config.currentDraftDirectory)
     await writeFileSync(config.artifactPaths.tableSecurityProfilesPath, JSON.stringify(defaultTableSecurityProfiles,null,2))
     await writeFileSync(config.artifactPaths.functionSecurityProfilesPath, JSON.stringify(defaultFunctionSecurityProfiles,null,2))
     await writeFileSync(config.artifactPaths.roleSetPath, JSON.stringify(defaultPgrRoleSet,null,2))
+
     await writeFileSync(config.artifactPaths.tableProfileAssignmentsPath, JSON.stringify(tableProfileAssignments,null,2))
     await writeFileSync(config.artifactPaths.functionProfileAssignmentsPath, JSON.stringify(functionSecurityProfileAssignments,null,2))
     await writeFileSync(config.artifactPaths.scriptTemplatesPath, JSON.stringify(defaultScriptTemplates,null,2))

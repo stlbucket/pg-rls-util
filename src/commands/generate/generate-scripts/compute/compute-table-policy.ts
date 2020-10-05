@@ -72,10 +72,14 @@ async function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTab
     dropExistingRls: dropExistingRls
   }
 
-  return Mustache.render(
+  const tableScript =  Mustache.render(
     config.scriptTemplates.tablePolicyTemplate,
     templateVariables
   )
+  .split('&#x3D;')
+  .join('=')
+
+  return tableScript
 
 }
 

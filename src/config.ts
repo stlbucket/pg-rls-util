@@ -49,6 +49,13 @@ async function loadConfig(argv?: any): Promise<PgrConfig> {
     process.exit(1)
   }
 
+  const schemata = process.env.PGR_SCHEMATA
+
+  if (!schemata) {
+    console.error("Environment variable PGR_SCHEMATA must be defined for pg-rls-util.  you can also use the --schemata flag.")
+    process.exit(1)
+  }
+
   const roles: PgrRoleSet = await loadOneConfigFile(roleSetPath)
   const tableSecurityProfiles: PgrTableSecurityProfileSet = await loadOneConfigFile(tableSecurityProfilesPath)
   const functionSecurityProfiles: PgrFunctionSecurityProfileSet = await loadOneConfigFile(functionSecurityProfilesPath)
@@ -62,6 +69,7 @@ async function loadConfig(argv?: any): Promise<PgrConfig> {
     baseDirectory: baseDirectory,
     currentDraftDirectory: currentDraftDirectory,
     dbConfig: {connectionString: connectionString},
+    schemata: schemata,
     artifactsDirectory: artifactsDirectory,
     releasesDirectory: releasesDirectory,
     roleSet: roles,

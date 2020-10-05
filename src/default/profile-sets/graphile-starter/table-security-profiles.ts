@@ -1,7 +1,7 @@
 import { PgrTableSecurityProfileSet } from "../../../d"
 
 const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
-  "defaultProfileName": "no-access",
+  "defaultProfileName": "graphile-starter:: select,insert,update own",
   "defaultInsertExclusions": [
     "id",
     "created_at"
@@ -12,7 +12,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
   ],
   "tableSecurityProfiles": [
     {
-      "name": "no-access",
+      "name": "graphile-starter:: no-access",
       "enableRls": true,
       "grants": {
         "ALL": [],
@@ -30,35 +30,25 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       }
     },
     {
-      "name": "all-actions::all-users",
+      "name": "graphile-starter:: select,insert,update own",
       "enableRls": true,
       "grants": {
         "ALL": [],
         "SELECT": [
           {
-            "roleName": "soro_user"
+            "roleName": "graphile_visitor"
           }
         ],
         "INSERT": [
           {
-            "roleName": "soro_user",
-          },
-          {
-            "roleName": "soro_super_admin",
-            "exclusions": ["created_at"]
+            "roleName": "graphile_visitor"
           }
         ],
         "UPDATE": [
-          {
-            "roleName": "soro_user",
-          },
-          {
-            "roleName": "soro_super_admin"
-          }
         ],
         "DELETE": [
           {
-            "roleName": "soro_user"
+            "roleName": "graphile_visitor"
           }
         ]
       },
@@ -67,9 +57,9 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "SELECT": [
           {
             "cmd": "SELECT",
-            "qual": "soro.check_access(seller_id)",
+            "qual": "user_id \= app_public.current_user_id()",
             "roles": [
-              "soro_user"
+              "graphile_visitor"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "can_select",
@@ -85,7 +75,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
             ],
             "permissive": "PERMISSIVE",
             "policyname": "can_insert",
-            "with_check": "soro.check_access(seller_id)"
+            "with_check": "user_id \= app_public.current_user_id()"
           }
         ],
         "UPDATE": [
@@ -97,98 +87,10 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
             ],
             "permissive": "PERMISSIVE",
             "policyname": "can_update",
-            "with_check": "soro.check_access(seller_id)"
+            "with_check": "user_id \= app_public.current_user_id()"
           }
         ],
         "DELETE": [
-          {
-            "cmd": "DELETE",
-            "qual": "soro.check_access(seller_id)",
-            "roles": [
-              "soro_user"
-            ],
-            "permissive": "PERMISSIVE",
-            "policyname": "can_delete",
-            "with_check": null
-          }
-        ]
-      }
-    },
-    {
-      "name": "super-admin-crud::user-read",
-      "enableRls": true,
-      "grants": {
-        "ALL": [],
-        "SELECT": [
-          {
-            "roleName": "soro_user"
-          }
-        ],
-        "INSERT": [
-          {
-            "roleName": "soro_super_admin",
-          }
-        ],
-        "UPDATE": [
-          {
-            "roleName": "soro_super_admin",
-          }
-        ],
-        "DELETE": [
-          {
-            "roleName": "soro_super_admin",
-          }
-        ]
-      },
-      "policies": {
-        "ALL": [],
-        "SELECT": [
-          {
-            "cmd": "SELECT",
-            "qual": "soro.check_access(seller_id)",
-            "roles": [
-              "soro_user"
-            ],
-            "permissive": "PERMISSIVE",
-            "policyname": "can_select",
-            "with_check": null
-          }
-        ],
-        "INSERT": [
-          {
-            "cmd": "INSERT",
-            "qual": null,
-            "roles": [
-              "soro_super_admin"
-            ],
-            "permissive": "PERMISSIVE",
-            "policyname": "can_insert",
-            "with_check": "true"
-          }
-        ],
-        "UPDATE": [
-          {
-            "cmd": "UPDATE",
-            "qual": null,
-            "roles": [
-              "soro_super_admin"
-            ],
-            "permissive": "PERMISSIVE",
-            "policyname": "can_update",
-            "with_check": "true"
-          }
-        ],
-        "DELETE": [
-          {
-            "cmd": "DELETE",
-            "qual": "true",
-            "roles": [
-              "soro_super_admin"
-            ],
-            "permissive": "PERMISSIVE",
-            "policyname": "can_delete",
-            "with_check": null
-          }
         ]
       }
     }

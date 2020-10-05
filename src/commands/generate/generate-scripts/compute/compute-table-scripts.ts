@@ -20,6 +20,7 @@ function computeTableRemoveRls (table: PgrTable): string {
 
 async function computeSchemaTableScripts(schemaTableAssignmentSet: PgrSchemaTableProfileAssignmentSet, securityProfiles: PgrTableSecurityProfile[], roles: PgrRoleSet, introspection: PgrDbIntrospection, dropExistingRls = false):  Promise<PgrSchemaTableScriptSet>{
   const p = Object.keys(schemaTableAssignmentSet.tableAssignments)
+  .filter(t => t === 'users')
     .map(
       async (tableName: string): Promise<PgrTableScript> => {
         const table = introspection.schemaTree

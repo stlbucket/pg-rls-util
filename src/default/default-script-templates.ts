@@ -150,8 +150,8 @@ GRANT USAGE ON SCHEMA public TO {{dbAuthenticatorRole}};
 
 {{/roleGrants}}
 
-----======  END TABLE POLICY: {{schemaName}}.{{tableName}}
---==
+----*******  END TABLE POLICY: {{schemaName}}.{{tableName}}
+--**
 `,
   rolesTemplate: `
 ------------  DB OWNER ROLE ------------

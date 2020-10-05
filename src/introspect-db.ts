@@ -1,9 +1,12 @@
-import { PgrDbIntrospection, PgrRlsPolicy } from './d'
+import { PgrConfig, PgrDbIntrospection, PgrRlsPolicy } from './d'
 import {doQuery} from './pg-client'
 import buildQuery from './pg11IntrospectionQuery'
+import loadConfig from './config'
+let config: PgrConfig
 
 async function introspectDb(): Promise<PgrDbIntrospection> {
-  const sql = await buildQuery('soro, soro_auth, soro_auth_app, ucs, leaf, lf_hist, prd_fn, evt')
+  config = await loadConfig()
+  const sql = await buildQuery(config.schemata)
   const introspection = (await doQuery(sql)).rows
   const mappedSchemaTree = introspection[0].schema_tree
   .map(

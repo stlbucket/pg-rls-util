@@ -1,30 +1,18 @@
 import { PgrRoleSet } from "../../../d"
 
 const roleSet: PgrRoleSet = {
-  "name": "soro-anon",
+  "name": "graphile-starter",
   "dbOwnerRole": {
-    "roleName": "soro",
+    "roleName": "graphile_starter",
     "applicableRoles": []
   },
   "dbAuthenticatorRole": {
-    "roleName": "postgres",
-    "applicableRoles": [ "soro_admin", "soro_user","soro_anonymous" ]
+    "roleName": "graphile_starter_authenticator",
+    "applicableRoles": [ "graphile_starter_visitor" ]
   },
   "dbUserRoles": [
     {
-      "roleName": "soro_super_admin",
-      "applicableRoles": []
-    },
-    {
-      "roleName": "soro_admin",
-      "applicableRoles": []
-    },
-    {
-      "roleName": "soro_user",
-      "applicableRoles": []
-    },
-    {
-      "roleName": "soro_anonymous",
+      "roleName": "graphile_starter_visitor",
       "applicableRoles": []
     }
   ]
