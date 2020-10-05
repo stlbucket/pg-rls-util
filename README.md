@@ -141,7 +141,7 @@ later, when you have added new tables and functions, diff freshly introspects th
 ```
 npx pg-rls-util diff -x -c postgres://[USER]:[PWD]@[HOST]:[PORT]/[DB_NAME] -s app_hidden,app_private,app_public -p graphile-starter
 ```
-this will create *current-draft/current-diff.json*.  after review/ad
+this will create *current-draft/current-diff.json*
 ### merge
 fold current-diff.json into table-profile-assignments.json and function-profile-assignments.json
 ```
