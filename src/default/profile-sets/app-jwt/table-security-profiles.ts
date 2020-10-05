@@ -2,6 +2,7 @@ import { PgrTableSecurityProfileSet } from "../../../d"
 
 const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
   "defaultProfileName": "no-access",
+  "includeTableRlsRemoval": true,
   "defaultInsertExclusions": [
     "id",
     "created_at"
@@ -10,6 +11,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
     "id",
     "created_at"
   ],
+  "defaultInitialTableAssignments": [],
   "tableSecurityProfiles": [
     {
       "name": "no-access",

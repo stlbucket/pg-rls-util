@@ -1,13 +1,19 @@
-import { PgrSchemaTableProfileAssignmentSet, PgrSchema, PgrTable, PgrDbIntrospection, PgrConfig, PgrTableSecurityProfileSet } from '../../d'
+import { PgrSchemaTableProfileAssignmentSet, PgrSchema, PgrTable, PgrDbIntrospection, PgrTableSecurityProfileSet } from '../../d'
 
 async function  calcTableProfileAssignments(introspection:PgrDbIntrospection, tableSecurityProfileSet: PgrTableSecurityProfileSet): Promise<PgrSchemaTableProfileAssignmentSet[]> {
   const tableProfileAssignments: PgrSchemaTableProfileAssignmentSet[] = introspection.schemaTree.map(
     (s: PgrSchema) => {
+      const schemaDefaultInitialAssignments = tableSecurityProfileSet.defaultInitialTableAssignments.find(t => t.schemaName === s.schemaName) || {
+        schemaName: s.schemaName,
+        tableAssignments: {}
+      }
+
       const tableAssignments = s.schemaTables.reduce(
         (a: any, t:PgrTable) => {
+          const initialTableProfileName = schemaDefaultInitialAssignments.tableAssignments[t.tableName] || tableSecurityProfileSet.defaultProfileName
           return {
             ...a,
-            [t.tableName]: tableSecurityProfileSet.defaultProfileName
+            [t.tableName]: initialTableProfileName
           }
         }, {}
       )

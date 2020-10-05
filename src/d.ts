@@ -78,13 +78,21 @@ export type ColumnExclusionSet = string[]
   
 export interface PgrTableSecurityProfileSet {
   defaultProfileName: string,
+  includeTableRlsRemoval: boolean,
   defaultInsertExclusions: ColumnExclusionSet,
   defaultUpdateExclusions: ColumnExclusionSet,
+  defaultInitialTableAssignments: PgrSchemaTableProfileAssignmentSet[]
   tableSecurityProfiles: PgrTableSecurityProfile[]
 }
 
+export interface PgrExclusionSet {
+  tableSecurityProfileName: string,
+  insertExclusions: string[],
+  updateExclusions: string[]
+}
+
 export interface PgrTableAssignment {
-  [key: string]: string
+  [key: string]: string | PgrExclusionSet
 }
 
 export interface PgrSchemaTableProfileAssignmentSet {
@@ -114,6 +122,7 @@ export interface PgrFunctionSecurityProfile {
 
 export interface PgrFunctionSecurityProfileSet {
   defaultProfileName: string,
+  defaultInitialFunctionAssignments: PgrSchemaFunctionProfileAssignmentSet[],
   functionSecurityProfiles: PgrFunctionSecurityProfile[]
 }
 

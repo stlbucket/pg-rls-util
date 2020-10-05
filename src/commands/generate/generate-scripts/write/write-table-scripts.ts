@@ -11,13 +11,44 @@ const tableFullSqlTemplate = `
 
 -- this script is meant to give a quick view of the before and after state for table:  {{ts.tableSchema}}.{{ts.tableName}}
 begin;
+\\echo
+\\echo ........
+\\echo ....DETAILED TABLE INFORMATION
+\\echo ........
 \\d+ {{ts.tableSchema}}.{{ts.tableName}}
+\\echo
+\\echo ........
+\\echo ....SECURITY BEFORE SCRIPT EXECUTES
+\\echo ........
 \\dp+ {{ts.tableSchema}}.{{ts.tableName}}
 
+{{#includeRemoveRls}}
+\\echo
+\\echo ........
+\\echo ....TEMPORARILY REMOVE ANY EXISTING RLS SECURITY
+\\echo ....this section NOT included in scripts meant for deployment - only here
+\\echo ....this setting can be controlled by table-security-profiles.includeTableRlsRemoval settinc
+\\echo ........
 {{{ts.tableRemoveRlsScript}}}
+{{/includeRemoveRls}}
+{{^includeRemoveRls}}
+\\echo
+\\echo ........
+\\echo ....LEAVING ANY EXISTING RLS INTACT
+\\echo ....this setting can be controlled by table-security-profiles.includeTableRlsRemoval settinc
+\\echo ........
+{{/includeRemoveRls}}
 
+\\echo
+\\echo ........
+\\echo ....now executing actual table script
+\\echo ........
 {{ts.tableScript}}
 
+\\echo
+\\echo ........
+\\echo ....SECURITY AFTER SCRIPT EXECUTES
+\\echo ........
 \\dp+ {{ts.tableSchema}}.{{ts.tableName}};
 rollback;
 `
@@ -44,10 +75,10 @@ async function writeSchemaTableScripts(tableScriptSet: PgrSchemaTableScriptSet):
             dbHost: connectionInfo.dbHost,
             dbUser: connectionInfo.dbUser,
             dbName: connectionInfo.dbName,
-            tableScriptPath: tableScriptPath
+            tableScriptPath: tableScriptPath,
+            includeRemoveRls: config.tableSecurityProfileSet.includeTableRlsRemoval
           }
         )
-        console.log(fileContents.split('&#x3D;').join('='))
         await writeFileSync(tableScriptPath, fileContents.split('&#x3D;').join('='))
       }
     )
