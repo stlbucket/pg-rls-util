@@ -9,7 +9,8 @@ const tableFullSqlTemplate = `
 --                       
 -- psql -h {{{dbHost}}} -U {{{dbUser}}} -d {{dbName}} -f {{{tableScriptPath}}}
 
--- this script is meant to give a quick view of the before and after state for table:  {{ts.tableSchema}}.{{ts.tableName}}
+-- this script is meant to used during development                    ----------------------
+-- to give a quick view of the before and after state for table:      {{ts.tableSchema}}.{{ts.tableName}}
 begin;
 \\echo
 \\echo ........
