@@ -6,8 +6,6 @@ let config: PgrConfig
 
 import createBaseDir from './init/createBaseDir'
 import buildCurrentDraftDir from './init/buildCurrentDraftDir'
-import calcTableProfileAssignments from './init/calcTableProfileAssignments'
-import calcFunctionSecurityProfileAssignments from './init/calcFunctionSecurityProfileAssignments'
 
 
 async function handler(argv) {
@@ -17,10 +15,8 @@ async function handler(argv) {
   await createBaseDir(argv, config)
 
   const introspection = await introspectDb()
-  const tableProfileAssignments = await calcTableProfileAssignments(introspection)
-  const functionProfileAssignments = await calcFunctionSecurityProfileAssignments(introspection)
 
-  await buildCurrentDraftDir(argv, config, tableProfileAssignments, functionProfileAssignments)
+  await buildCurrentDraftDir(argv, config, introspection)
 
 
   process.exit()

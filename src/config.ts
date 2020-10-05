@@ -63,7 +63,8 @@ async function loadConfig(argv?: any): Promise<PgrConfig> {
   const functionSecurityProfileAssignments: PgrFunctionSecurityProfileAssignmentSet[] = await loadOneConfigFile(functionProfileAssignmentsPath)
   const scriptTemplates: PgrScriptTemplateSet = await loadOneConfigFile(scriptTemplatesPath)
   const currentDiff: PgrDiffSummary = await loadOneConfigFile(currentDiffPath)
-
+// console.log(tableSecurityProfiles, tableSecurityProfilesPath)
+// process.exit()
   config = {
     argv: argv,
     baseDirectory: baseDirectory,

@@ -1,16 +1,13 @@
-import { PgrConfig, PgrSchema, PgrSchemaFunctionProfileAssignmentSet } from '../../d'
-import loadConfig from '../../config'
-let config: PgrConfig
+import { PgrConfig, PgrFunctionSecurityProfileAssignmentSet, PgrFunctionSecurityProfileSet, PgrSchema, PgrSchemaFunctionProfileAssignmentSet } from '../../d'
 
-async function  calcFunctionSecurityProfileAssignments(introspection: any): Promise<PgrSchemaFunctionProfileAssignmentSet[]> {
-  config = await loadConfig()
+async function  calcFunctionSecurityProfileAssignments(introspection: any, functionSecurityProfileSet: PgrFunctionSecurityProfileSet): Promise<PgrSchemaFunctionProfileAssignmentSet[]> {
   const functionSecurityProfileAssignments: PgrSchemaFunctionProfileAssignmentSet[] = introspection.schemaTree.map(
     (s: PgrSchema) => {
       const functionAssignments = s.schemaFunctions.reduce(
         (a: any, f: any) => {
           return {
             ...a,
-            [f.functionName]: config.functionSecurityProfileSet.defaultProfileName
+            [f.functionName]: functionSecurityProfileSet.defaultProfileName
           }
         }, {}
       )

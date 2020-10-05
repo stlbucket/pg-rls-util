@@ -3,10 +3,12 @@ import getDefaultTableSecurityProfiles from '../../default/default-table-securit
 import getDefaultFunctionSecurityProfiles from '../../default/default-function-security-profiles'
 import getDefaultPgrRoleSet from '../../default/default-role-set'
 import defaultScriptTemplates from '../../default/default-script-templates'
-import { PgrSchemaTableProfileAssignmentSet, PgrSchemaFunctionProfileAssignmentSet, PgrConfig } from '../../d'
+import { PgrConfig, PgrDbIntrospection } from '../../d'
+import calcTableProfileAssignments from './calcTableProfileAssignments'
+import calcFunctionSecurityProfileAssignments from './calcFunctionSecurityProfileAssignments'
 
 
-async function  buildCurrentDraftDir(argv: any, config: PgrConfig, tableProfileAssignments: PgrSchemaTableProfileAssignmentSet[], functionSecurityProfileAssignments: PgrSchemaFunctionProfileAssignmentSet[]) {
+async function  buildCurrentDraftDir(argv: any, config: PgrConfig, introspection: PgrDbIntrospection) {  
   if (argv.force) {
     // @ts-ignore
     await rmdirSync(currentDraftDir, {recursive: true})
@@ -23,8 +25,11 @@ async function  buildCurrentDraftDir(argv: any, config: PgrConfig, tableProfileA
     await writeFileSync(config.artifactPaths.functionSecurityProfilesPath, JSON.stringify(defaultFunctionSecurityProfiles,null,2))
     await writeFileSync(config.artifactPaths.roleSetPath, JSON.stringify(defaultPgrRoleSet,null,2))
 
+    const tableProfileAssignments = await calcTableProfileAssignments(introspection, defaultTableSecurityProfiles)
+    const functionProfileAssignments = await calcFunctionSecurityProfileAssignments(introspection, defaultFunctionSecurityProfiles)
+  
     await writeFileSync(config.artifactPaths.tableProfileAssignmentsPath, JSON.stringify(tableProfileAssignments,null,2))
-    await writeFileSync(config.artifactPaths.functionProfileAssignmentsPath, JSON.stringify(functionSecurityProfileAssignments,null,2))
+    await writeFileSync(config.artifactPaths.functionProfileAssignmentsPath, JSON.stringify(functionProfileAssignments,null,2))
     await writeFileSync(config.artifactPaths.scriptTemplatesPath, JSON.stringify(defaultScriptTemplates,null,2))
   } else {
     console.log('current-draft already exists.  use -f or -x options to force re-init')
