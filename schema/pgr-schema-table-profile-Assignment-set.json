@@ -1,0 +1,51 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "PgrExclusionSet": {
+            "properties": {
+                "insertExclusions": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "tableSecurityProfileName": {
+                    "type": "string"
+                },
+                "updateExclusions": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
+        "PgrTableAssignment": {
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "$ref": "#/definitions/PgrExclusionSet"
+                    },
+                    {
+                        "type": "string"
+                    }
+                ]
+            },
+            "type": "object"
+        }
+    },
+    "properties": {
+        "schemaName": {
+            "type": "string"
+        },
+        "tableAssignments": {
+            "$ref": "#/definitions/PgrTableAssignment"
+        },
+        "viewAssignments": {
+            "$ref": "#/definitions/PgrTableAssignment"
+        }
+    },
+    "type": "object"
+}
+

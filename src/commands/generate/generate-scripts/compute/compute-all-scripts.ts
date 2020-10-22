@@ -8,7 +8,7 @@ import { PgrDbIntrospection, PgrScriptSet } from '../../../../d'
 async function computeAllScripts(introspection: PgrDbIntrospection): Promise<PgrScriptSet> {
 
     const masterTableScriptSetRemoveRls = await computeAllTableScripts(introspection, true)
-    const masterTableScriptSet = await computeAllTableScripts(introspection, true)
+    const masterTableScriptSet = await computeAllTableScripts(introspection)
     const masterFunctionScriptSet = await computeAllFunctionScripts(introspection)
     const ownershipScript = await computeOwnershipPolicy(introspection)
     const removeAllRlsScript = await computeRemoveAllRls(introspection)

@@ -43,7 +43,7 @@ npx pg-rls-util init -x -c postgres://[USER]:[PWD]@[HOST]:[PORT]/[DB_NAME] -s ap
 ### generate
 create the *current-draft/artifacts* directory
 ```
-npx pg-rls-util generate -x -c postgres://[USER]:[PWD]@[HOST]:[PORT]/[DB_NAME] -s app_hidden,app_private,app_public
+npx pg-rls-util generate
 ```
 scripts created include:
 - one-script-to-rule-them-all.sql
@@ -134,16 +134,16 @@ rollback;
 ### release
 copy the current draft over to a numbered release.  really, you will also want to also copy one or more of the generated scripts over to your own db change management tool.  but this is a way to snapshot your work as you go along and could be more tightly coupled via automation
 ```
-npx pg-rls-util release -x -c postgres://[USER]:[PWD]@[HOST]:[PORT]/[DB_NAME] -s app_hidden,app_private,app_public
+npx pg-rls-util release
 ```
 ### diff
 later, when you have added new tables and functions, diff freshly introspects the database to help identify and review differences.
 ```
-npx pg-rls-util diff -x -c postgres://[USER]:[PWD]@[HOST]:[PORT]/[DB_NAME] -s app_hidden,app_private,app_public
+npx pg-rls-util diff
 ```
 this will create *current-draft/current-diff.json*
 ### merge
 fold current-diff.json into table-profile-assignments.json and function-profile-assignments.json
 ```
-npx pg-rls-util merge -x -c postgres://[USER]:[PWD]@[HOST]:[PORT]/[DB_NAME] -s app_hidden,app_private,app_public
+npx pg-rls-util merge
 ```

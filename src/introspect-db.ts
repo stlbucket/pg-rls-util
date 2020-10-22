@@ -56,11 +56,11 @@ async function getExistingPolicyTemplates(rlsPolicies: PgrRlsPolicy[]) {
     .reduce(
       (a: PgrRlsPolicy[], p: PgrRlsPolicy) => {
         const exists = a.find((ep) => {
-          return ep.cmd === p.cmd && 
-            ep.permissive === p.permissive && 
-            // ep.policyname === p.policyname && 
-            ep.qual === p.qual && 
-            ep.with_check === p.with_check && 
+          return ep.cmd === p.cmd &&
+            ep.permissive === p.permissive &&
+            // ep.policyname === p.policyname &&
+            ep.qual === p.qual &&
+            ep.with_check === p.with_check &&
             ep.roles.join(",") === p.roles.join(",")
         })
         return exists ? a : [
@@ -84,14 +84,14 @@ async function sortExistingPolicies(rlsPolicies: PgrRlsPolicy[]) {
           .find(
             (key: string) => {
               const ep = a[key].assignments[0]
-              return ep.cmd === p.cmd && 
-                ep.permissive === p.permissive && 
-                ep.qual === p.qual && 
-                ep.with_check === p.with_check && 
+              return ep.cmd === p.cmd &&
+                ep.permissive === p.permissive &&
+                ep.qual === p.qual &&
+                ep.with_check === p.with_check &&
                 ep.roles.join(",") === p.roles.join(",")
             }
           )
-        
+
         return existing ? {
           ...a,
           [existing]: {

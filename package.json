@@ -45,6 +45,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "exec": "npm run build && node -r dotenv/config pg-rls-util",
     "test": "jest --coverage",
+    "gen-json-schemata": "npm run build && node -r dotenv/config build/src/gen-json-schemata",
     "test:watch": "jest --watch"
   },
   "author": "Kevin Burkett",
@@ -54,6 +55,7 @@
     "mustache": "^4.0.1",
     "pg": "^8.3.3",
     "tslib": "~2.0.0",
+    "typescript-json-schema": "^0.43.0",
     "yargs": "^16.0.3"
   },
   "volta": {

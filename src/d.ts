@@ -44,7 +44,7 @@ export interface PgrRoleGrantSet {
   INSERT: PgrRoleGrant[],
   UPDATE: PgrRoleGrant[],
   DELETE: PgrRoleGrant[],
-  [key: string]: PgrRoleGrant[] 
+  [key: string]: PgrRoleGrant[]
 }
 
 export interface PgrRlsPolicy {
@@ -75,7 +75,7 @@ export interface PgrTableSecurityProfile {
 }
 
 export type ColumnExclusionSet = string[]
-  
+
 export interface PgrTableSecurityProfileSet {
   defaultProfileName: string,
   includeTableRlsRemoval: boolean,
@@ -112,7 +112,7 @@ export interface PgrSchemaFunctionProfileAssignmentSet {
 
 export interface PgrFunctionRoleGrantSet {
   EXECUTE: string[],
-  [key: string]: string[] 
+  [key: string]: string[]
 }
 
 export interface PgrFunctionSecurityProfile {
@@ -140,8 +140,13 @@ export interface PgrConnectionInfo {
   ,dbConnectionString: string
 }
 
+export interface PgrProjectConfig {
+  schemata: string
+}
+
 export interface PgrConfig {
   argv: any,
+  projectConfig: PgrProjectConfig,
   dbConfig: ConnectionConfig,
   schemata: string,
   baseDirectory: string,
@@ -172,7 +177,9 @@ export interface PgrArtifactPathSet {
   createRolesPath: string,
   ownershipPath: string,
   removeAllRlsPath: string,
-  schemaUsageSqlPath: string
+  schemaUsageSqlPath: string,
+  dbConfigPath: string,
+  projectConfigPath: string
 }
 
 export interface PgrDiffSummary {
@@ -208,8 +215,10 @@ export interface PgrSchemaFunctionScriptSet {
   functionScripts: PgrFunctionScript[]
 }
 
+export type PgrSchemaFunctionScriptSets = PgrSchemaFunctionScriptSet[]
+
 export interface PgrMasterFunctionScriptSet {
-  schemaFunctionScriptSets: PgrSchemaFunctionScriptSet[]
+  schemaFunctionScriptSets: PgrSchemaFunctionScriptSets
 }
 
 export interface PgrScriptSet {

@@ -10,6 +10,7 @@ async function handler(argv) {
   if (argv.schemata) process.env.PGR_SCHEMATA = argv.schemata
   config = await loadConfig(argv)
   const introspection = await introspectDb()
+
   await generateAllScripts(introspection)
 
   process.exit()
@@ -19,10 +20,7 @@ async function handler(argv) {
 const command = 'generate'
 const aliases = 'g'
 const describe = 'generate all policy scripts'
-const builder: CommandBuilder = {
-  c: { type: 'string', alias: 'connectionString', description: 'a postgres connection string that will define/override PGR_DB_CONNECTION_STRING env variable'},
-  s: { type: 'string', alias: 'schemata', description: 'a comma-delimited string of databse schemas to work with'}
-}
+const builder: CommandBuilder = {}
 const deprecated = false
 
 export default {command, aliases, describe, builder, handler, deprecated}

@@ -1,10 +1,12 @@
 import {existsSync, readFileSync} from 'fs'
-import { PgrConfig, PgrDiffSummary, PgrFunctionSecurityProfileAssignmentSet, PgrFunctionSecurityProfileSet, PgrRoleSet, PgrSchemaTableProfileAssignmentSet, PgrScriptTemplateSet, PgrTableSecurityProfileSet } from './d'
+import { ConnectionConfig } from 'pg'
+import { PgrConfig, PgrDiffSummary, PgrFunctionSecurityProfileAssignmentSet, PgrFunctionSecurityProfileSet, PgrProjectConfig, PgrRoleSet, PgrSchemaTableProfileAssignmentSet, PgrScriptTemplateSet, PgrTableSecurityProfileSet } from './d'
 
 const baseDirectory = process.env.PGR_WORK_DIR || `${process.cwd()}/.pgrlsgen`
-const currentDraftDirectory = `${baseDirectory}/current-draft`
-const artifactsDirectory = `${currentDraftDirectory}/artifacts`
 const releasesDirectory = `${baseDirectory}/releases`
+
+// current-draft paths
+const currentDraftDirectory = `${baseDirectory}/current-draft`
 const roleSetPath = `${currentDraftDirectory}/roles.json`
 const tableProfileAssignmentsPath = `${currentDraftDirectory}/table-profile-assignments.json`
 const tableProfileAssignmentsStagedPath = `${currentDraftDirectory}/table-profile-assignments-staged.json`
@@ -14,6 +16,11 @@ const functionProfileAssignmentsStagedPath = `${currentDraftDirectory}/function-
 const functionSecurityProfilesPath = `${currentDraftDirectory}/function-security-profiles.json`
 const scriptTemplatesPath = `${currentDraftDirectory}/script-templates.json`
 const currentDiffPath = `${currentDraftDirectory}/current-diff.json`
+const dbConfigPath = `${currentDraftDirectory}/db-config.json`
+const projectConfigPath = `${currentDraftDirectory}/project-config.json`
+
+// artifact paths
+const artifactsDirectory = `${currentDraftDirectory}/artifacts`
 const createRolesPath = `${artifactsDirectory}/create-roles.sql`
 const ownershipPath = `${artifactsDirectory}/ownership.sql`
 const removeAllRlsPath = `${artifactsDirectory}/remove-all-rls.sql`
@@ -42,17 +49,25 @@ async function loadConfig(argv?: any): Promise<PgrConfig> {
   if (config !== null) return config;
   if (!argv) throw new Error('Initial config load must include argv parameter')
 
-  const connectionString = process.env.PGR_DB_CONNECTION_STRING
+  const connectionString = process.env.PGR_DB_CONNECTION_STRING || argv.connectionString
 
-  if (!connectionString) {
-    console.error("Environment variable PGR_DB_CONNECTION_STRING must be defined for pg-rls-util.  you can also use the --connectionString flag.")
+  const dbConfig: ConnectionConfig =
+  connectionString ? { connectionString: connectionString } :
+    (await loadOneConfigFile(dbConfigPath))
+
+  if (!dbConfig.connectionString) {
+    console.error("ConnectionString must be defined in one of three ways:  process.env.PGR_DB_CONNECTION_STRING; argv.connectionString; current-draft/db-config.json")
     process.exit(1)
   }
 
-  const schemata = process.env.PGR_SCHEMATA
+  const schemata = process.env.PGR_SCHEMATA || argv.schemata
 
-  if (!schemata) {
-    console.error("Environment variable PGR_SCHEMATA must be defined for pg-rls-util.  you can also use the --schemata flag.")
+  const projectConfig: PgrProjectConfig =
+    schemata ? { schemata: schemata } :
+    (await loadOneConfigFile(projectConfigPath))
+
+  if (!projectConfig.schemata) {
+    console.error("Schemata must be defined in one of three ways:  process.env.PGR_SCHEMATA; argv.schemata; current-draft/project-config.json")
     process.exit(1)
   }
 
@@ -63,14 +78,14 @@ async function loadConfig(argv?: any): Promise<PgrConfig> {
   const functionSecurityProfileAssignments: PgrFunctionSecurityProfileAssignmentSet[] = await loadOneConfigFile(functionProfileAssignmentsPath)
   const scriptTemplates: PgrScriptTemplateSet = await loadOneConfigFile(scriptTemplatesPath)
   const currentDiff: PgrDiffSummary = await loadOneConfigFile(currentDiffPath)
-// console.log(tableSecurityProfiles, tableSecurityProfilesPath)
-// process.exit()
+
   config = {
     argv: argv,
     baseDirectory: baseDirectory,
     currentDraftDirectory: currentDraftDirectory,
-    dbConfig: {connectionString: connectionString},
-    schemata: schemata,
+    projectConfig: projectConfig,
+    dbConfig: dbConfig,
+    schemata: projectConfig.schemata,
     artifactsDirectory: artifactsDirectory,
     releasesDirectory: releasesDirectory,
     roleSet: roles,
@@ -93,7 +108,9 @@ async function loadConfig(argv?: any): Promise<PgrConfig> {
       ownershipPath: ownershipPath,
       removeAllRlsPath: removeAllRlsPath,
       oneScriptToRuleThemAllPath: oneScriptToRuleThemAllPath,
-      schemaUsageSqlPath: schemaUsageSqlPath
+      schemaUsageSqlPath: schemaUsageSqlPath,
+      dbConfigPath: dbConfigPath,
+      projectConfigPath: projectConfigPath
     },
     scriptTemplates: scriptTemplates
   }

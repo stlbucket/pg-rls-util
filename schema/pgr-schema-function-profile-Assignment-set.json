@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "PgrFunctionAssignment": {
+            "additionalProperties": {
+                "type": "string"
+            },
+            "type": "object"
+        }
+    },
+    "properties": {
+        "functionAssignments": {
+            "$ref": "#/definitions/PgrFunctionAssignment"
+        },
+        "schemaName": {
+            "type": "string"
+        }
+    },
+    "type": "object"
+}
+
