@@ -41,7 +41,7 @@ npx pg-rls-util init -x -c postgres://[USER]:[PWD]@[HOST]:[PORT]/[DB_NAME] -s ap
 - function-security-profiles.json: meant to be edited
 - function-profile-assignments.json: meant to be edited
 ### generate
-create the *current-draft/artifacts* directory
+creates the *current-draft/artifacts* directory
 ```
 npx pg-rls-util generate
 ```
