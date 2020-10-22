@@ -6,17 +6,17 @@ import defaultScriptTemplates from '../../default/default-script-templates'
 import { PgrConfig, PgrDbIntrospection } from '../../d'
 import calcTableProfileAssignments from './calcTableProfileAssignments'
 import calcFunctionSecurityProfileAssignments from './calcFunctionSecurityProfileAssignments'
-import genJsonSchema from './gen-json-schemata'
+// import genJsonSchema from './gen-json-schemata'
 
-async function getJsonSchema(typeName: string) {
-  const jsonSchema = await genJsonSchema(typeName)
-  return jsonSchema
-}
+// async function getJsonSchema(typeName: string) {
+//   const jsonSchema = await genJsonSchema(typeName)
+//   return jsonSchema
+// }
 
-async function writeOnefile(config: PgrConfig, artifactObject: any, filePath: string, typeName: string) {
-  const jsonSchema = await getJsonSchema(typeName)
+async function writeOnefile(artifactObject: any, filePath: string) {
+  // const jsonSchema = await getJsonSchema(typeName)
   await writeFileSync(filePath, JSON.stringify(artifactObject,null,2))
-  await writeFileSync(`${config.currentDraftDirectory}/json-schema/${typeName}.json`, JSON.stringify(jsonSchema,null,2))
+  // await writeFileSync(`${config.currentDraftDirectory}/json-schema/${typeName}.json`, JSON.stringify(jsonSchema,null,2))
 }
 
 async function  buildCurrentDraftDir(argv: any, config: PgrConfig, introspection: PgrDbIntrospection) {
@@ -37,16 +37,16 @@ async function  buildCurrentDraftDir(argv: any, config: PgrConfig, introspection
     await writeFileSync(config.artifactPaths.dbConfigPath, JSON.stringify(config.dbConfig,null,2))
     await writeFileSync(config.artifactPaths.projectConfigPath, JSON.stringify(config.projectConfig,null,2))
 
-    await writeOnefile(config, defaultPgrRoleSet, config.artifactPaths.roleSetPath, 'PgrRoleSet')
-    await writeOnefile(config, defaultTableSecurityProfiles, config.artifactPaths.tableSecurityProfilesPath, 'PgrTableSecurityProfileSet')
-    await writeOnefile(config, defaultFunctionSecurityProfiles, config.artifactPaths.functionSecurityProfilesPath, 'PgrFunctionSecurityProfileSet')
+    await writeOnefile(defaultPgrRoleSet, config.artifactPaths.roleSetPath)
+    await writeOnefile(defaultTableSecurityProfiles, config.artifactPaths.tableSecurityProfilesPath)
+    await writeOnefile(defaultFunctionSecurityProfiles, config.artifactPaths.functionSecurityProfilesPath)
 
     const tableProfileAssignments = await calcTableProfileAssignments(introspection, defaultTableSecurityProfiles)
     const functionProfileAssignments = await calcFunctionSecurityProfileAssignments(introspection, defaultFunctionSecurityProfiles)
 
-    await writeOnefile(config, tableProfileAssignments, config.artifactPaths.tableProfileAssignmentsPath, 'PgrSchemaTableProfileAssignmentSet')
-    await writeOnefile(config, functionProfileAssignments, config.artifactPaths.functionProfileAssignmentsPath, 'PgrSchemaFunctionProfileAssignmentSet')
-    await writeOnefile(config, defaultScriptTemplates, config.artifactPaths.scriptTemplatesPath, 'PgrScriptTemplateSet')
+    await writeOnefile(tableProfileAssignments, config.artifactPaths.tableProfileAssignmentsPath)
+    await writeOnefile(functionProfileAssignments, config.artifactPaths.functionProfileAssignmentsPath)
+    await writeOnefile(defaultScriptTemplates, config.artifactPaths.scriptTemplatesPath)
 
     // await writeFileSync(config.artifactPaths.tableProfileAssignmentsPath, JSON.stringify(tableProfileAssignments,null,2))
     // await writeFileSync(config.artifactPaths.functionProfileAssignmentsPath, JSON.stringify(functionProfileAssignments,null,2))
