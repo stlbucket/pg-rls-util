@@ -36,7 +36,8 @@
     "typescript": "~3.9.7"
   },
   "files": [
-    "build"
+    "build",
+    "src/d.ts"
   ],
   "scripts": {
     "clean": "rimraf coverage build tmp",
