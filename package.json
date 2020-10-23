@@ -1,6 +1,6 @@
 {
   "name": "pg-rls-util",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "description": "A tool to generate postgres row-level-security policies.",
   "keywords": [
     "cli"
