@@ -80,7 +80,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "ALL": [],
         "SELECT": [
           {
-            "qual": "user_id = app_public.current_user_id()",
+            "using": "user_id = app_public.current_user_id()",
             "roles": [
               "graphile_starter_visitor"
             ],
@@ -91,7 +91,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         ],
         "INSERT": [
           {
-            "qual": null,
+            "using": null,
             "roles": [
               "graphile_starter_visitor"
             ],
@@ -102,7 +102,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         ],
         "UPDATE": [
           {
-            "qual": "user_id = app_public.current_user_id()",
+            "using": "user_id = app_public.current_user_id()",
             "roles": [
               "graphile_starter_visitor"
             ],
@@ -139,7 +139,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "ALL": [],
         "SELECT": [
           {
-            "qual": "true",
+            "using": "true",
             "roles": [
               "graphile_starter_visitor"
             ],
@@ -152,7 +152,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         ],
         "UPDATE": [
           {
-            "qual": "id = app_public.current_user_id()",
+            "using": "id = app_public.current_user_id()",
             "roles": [
               "graphile_starter_visitor"
             ],
@@ -190,7 +190,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "ALL": [],
         "SELECT": [
           {
-            "qual": "id IN ( SELECT app_public.current_user_member_organization_ids() AS current_user_member_organization_ids)",
+            "using": "id IN ( SELECT app_public.current_user_member_organization_ids() AS current_user_member_organization_ids)",
             "roles": [
               "graphile_starter_visitor"
             ],
@@ -199,7 +199,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
             "with_check": null
           },
           {
-            "qual": "id IN ( SELECT app_public.current_user_invited_organization_ids() AS current_user_invited_organization_ids)",
+            "using": "id IN ( SELECT app_public.current_user_invited_organization_ids() AS current_user_invited_organization_ids)",
             "roles": [
               "graphile_starter_visitor"
             ],
@@ -212,7 +212,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         ],
         "UPDATE": [
           {
-            "qual": null,
+            "using": null,
             "roles": [
               "graphile_starter_visitor"
             ],
@@ -246,7 +246,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "ALL": [],
         "SELECT": [
           {
-            "qual": "id IN ( SELECT app_public.current_user_member_organization_ids() AS current_user_member_organization_ids)",
+            "using": "id IN ( SELECT app_public.current_user_member_organization_ids() AS current_user_member_organization_ids)",
             "roles": [
               "graphile_starter_visitor"
             ],
@@ -255,7 +255,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
             "with_check": null
           },
           {
-            "qual": "id IN ( SELECT app_public.current_user_invited_organization_ids() AS current_user_invited_organization_ids)",
+            "using": "id IN ( SELECT app_public.current_user_invited_organization_ids() AS current_user_invited_organization_ids)",
             "roles": [
               "graphile_starter_visitor"
             ],
@@ -296,7 +296,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "ALL": [],
         "SELECT": [
           {
-            "qual": "user_id = app_public.current_user_id()",
+            "using": "user_id = app_public.current_user_id()",
             "roles": [
               "graphile_starter_visitor"
             ],
@@ -311,7 +311,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         ],
         "DELETE": [
           {
-            "qual": "user_id = app_public.current_user_id()",
+            "using": "user_id = app_public.current_user_id()",
             "roles": [
               "graphile_starter_visitor"
             ],

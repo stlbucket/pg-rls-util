@@ -59,7 +59,7 @@ async function getExistingPolicyTemplates(rlsPolicies: PgrRlsPolicy[]) {
           return ep.cmd === p.cmd &&
             ep.permissive === p.permissive &&
             // ep.policyname === p.policyname &&
-            ep.qual === p.qual &&
+            ep.using === p.using &&
             ep.with_check === p.with_check &&
             ep.roles.join(",") === p.roles.join(",")
         })
@@ -86,7 +86,7 @@ async function sortExistingPolicies(rlsPolicies: PgrRlsPolicy[]) {
               const ep = a[key].assignments[0]
               return ep.cmd === p.cmd &&
                 ep.permissive === p.permissive &&
-                ep.qual === p.qual &&
+                ep.using === p.using &&
                 ep.with_check === p.with_check &&
                 ep.roles.join(",") === p.roles.join(",")
             }

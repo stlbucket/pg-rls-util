@@ -69,7 +69,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "SELECT": [
           {
             "cmd": "SELECT",
-            "qual": "soro.check_access(seller_id)",
+            "using": "soro.check_access(seller_id)",
             "roles": [
               "soro_user"
             ],
@@ -81,7 +81,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "INSERT": [
           {
             "cmd": "INSERT",
-            "qual": null,
+            "using": null,
             "roles": [
               "soro_user"
             ],
@@ -93,7 +93,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "UPDATE": [
           {
             "cmd": "UPDATE",
-            "qual": null,
+            "using": null,
             "roles": [
               "soro_user"
             ],
@@ -105,7 +105,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "DELETE": [
           {
             "cmd": "DELETE",
-            "qual": "soro.check_access(seller_id)",
+            "using": "soro.check_access(seller_id)",
             "roles": [
               "soro_user"
             ],
@@ -147,7 +147,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "SELECT": [
           {
             "cmd": "SELECT",
-            "qual": "soro.check_access(seller_id)",
+            "using": "soro.check_access(seller_id)",
             "roles": [
               "soro_user"
             ],
@@ -159,7 +159,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "INSERT": [
           {
             "cmd": "INSERT",
-            "qual": null,
+            "using": null,
             "roles": [
               "soro_super_admin"
             ],
@@ -171,7 +171,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "UPDATE": [
           {
             "cmd": "UPDATE",
-            "qual": null,
+            "using": null,
             "roles": [
               "soro_super_admin"
             ],
@@ -183,7 +183,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "DELETE": [
           {
             "cmd": "DELETE",
-            "qual": "true",
+            "using": "true",
             "roles": [
               "soro_super_admin"
             ],

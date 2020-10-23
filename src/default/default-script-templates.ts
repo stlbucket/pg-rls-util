@@ -15,7 +15,7 @@ const scriptTemplates: PgrScriptTemplateSet = {
 {{#roleGrant}}
 ----------  CREATE NEW FUNCTION GRANTS
 ----------  {{roles}}
-  grant execute on function {{functionSignature}} to {{roles}};  
+  grant execute on function {{functionSignature}} to {{roles}};
 {{/roleGrant}}
 ----------  END FUNCTION POLICY: {{schemaName}}.{{functionName}}
 --==
@@ -24,7 +24,7 @@ const scriptTemplates: PgrScriptTemplateSet = {
 ----------
 ----------  BEGIN OWNERSHIP SQL
 ----------
-  
+
 
 {{#schemata}}
 ----------  SCHEMA: {{schemaName}}
@@ -50,13 +50,13 @@ const scriptTemplates: PgrScriptTemplateSet = {
 ----------
 DO
 $body$
-  DECLARE 
+  DECLARE
     _pol pg_policies;
     _drop_sql text;
   BEGIN
 
     for _pol in
-      select 
+      select
         *
       from pg_policies
       where schemaname = '{{schemaName}}'
@@ -94,13 +94,13 @@ GRANT USAGE ON SCHEMA public TO {{dbAuthenticatorRole}};
   ----------  REMOVE EXISTING RLS POLICIES
   DO
   $body$
-    DECLARE 
+    DECLARE
       _pol pg_policies;
       _drop_sql text;
     BEGIN
-  
+
       for _pol in
-        select 
+        select
           *
         from pg_policies
         where schemaname = '{{schemaName}}'
@@ -112,7 +112,7 @@ GRANT USAGE ON SCHEMA public TO {{dbAuthenticatorRole}};
       ;
     END
   $body$;
-  
+
 `,
   tablePolicyTemplate: `
 ----******
@@ -120,7 +120,7 @@ GRANT USAGE ON SCHEMA public TO {{dbAuthenticatorRole}};
 ----******  TABLE SECURITY PROFILE:  {{tableSecurityProfileName}}
 ----******
 ----------  REMOVE EXISTING TABLE GRANTS
-  revoke all privileges on table {{schemaName}}.{{tableName}} 
+  revoke all privileges on table {{schemaName}}.{{tableName}}
   from {{revokeRolesList}}
   ;
 
@@ -130,7 +130,7 @@ GRANT USAGE ON SCHEMA public TO {{dbAuthenticatorRole}};
 
 {{#rlsPolicies}}
   drop policy if exists {{policyname}} on {{schemaName}}.{{tableName}};
-  create policy {{policyname}} on {{schemaName}}.{{tableName}} as {{permissive}} for {{cmd}} to {{roles}}{{#qual}} using ({{qual}}){{/qual}}{{#with_check}} with check ({{with_check}}){{/with_check}};
+  create policy {{policyname}} on {{schemaName}}.{{tableName}} as {{permissive}} for {{cmd}} to {{roles}}{{#using}} using ({{using}}){{/using}}{{#with_check}} with check ({{with_check}}){{/with_check}};
 {{/rlsPolicies}}
 {{/enableRls}}
 {{^enableRls}}
@@ -142,7 +142,7 @@ GRANT USAGE ON SCHEMA public TO {{dbAuthenticatorRole}};
 {{#roleGrants}}
 
 ----------  {{roleName}}
-  grant 
+  grant
   {{#grants}}
     {{action}} {{grantColumns}}{{comma}} {{columnExclusionsText}}
   {{/grants}}

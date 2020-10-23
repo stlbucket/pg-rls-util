@@ -49,7 +49,7 @@ export interface PgrRoleGrantSet {
 
 export interface PgrRlsPolicy {
   cmd?: string,
-  qual: string | null,
+  using: string | null,
   roles: string[],
   permissive: string,
   policyname: string,

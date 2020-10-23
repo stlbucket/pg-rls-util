@@ -29,9 +29,16 @@ async function computeTableScript(tableName: string, schemaTableAssignmentSet: P
   const securityProfile = securityProfiles.find((sp: PgrTableSecurityProfile) => sp.name === spName)
   if (!securityProfile) throw new Error(`No securityProfile: ${spName}`)
   if (!table) throw new Error(`No table exists: ${tableName}`)
-  const mappedSecurityProfile = typeof spAssignment === 'string' ?
-    securityProfile :
-    mapSecurityProfile(securityProfile, spAssignment.insertAllowances, spAssignment.updateAllowances, true)
+
+
+  let mappedSecurityProfile
+  if (typeof spAssignment === 'string') {
+    mappedSecurityProfile = securityProfile
+  } else {
+    const insertExclusions = table.tableColumns.filter(tc => spAssignment.insertAllowances.indexOf(tc.column_name) === -1).map(tc => tc.column_name)
+    const updatetExclusions = table.tableColumns.filter(tc => spAssignment.updateAllowances.indexOf(tc.column_name) === -1).map(tc => tc.column_name)
+    mappedSecurityProfile = mapSecurityProfile(securityProfile, insertExclusions, updatetExclusions, true)
+  }
 
   const tableScript = await computeTablePolicy(table, mappedSecurityProfile, roles, dropExistingRls)
   const removeRlsScript = await computeTableRemoveRls(table)
