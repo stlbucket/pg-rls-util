@@ -44,7 +44,7 @@ function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFun
 
 async function computeSchemaFunctionScripts(schemaFunctionAssignmentSet: PgrFunctionSecurityProfileAssignmentSet, securityProfiles: PgrFunctionSecurityProfile[], roles: PgrRoleSet, introspection: PgrDbIntrospection): Promise<PgrSchemaFunctionScriptSet>{
   const p = Object.keys(schemaFunctionAssignmentSet.functionAssignments)
-    .filter(k => k === 'organization_for_invitation')
+    // .filter(k => k === 'link_or_register_user')
     .map(
       async (functionName: string) => {
         const fn = introspection.schemaTree
