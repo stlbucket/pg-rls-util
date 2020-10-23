@@ -31,7 +31,7 @@ async function computeTableScript(tableName: string, schemaTableAssignmentSet: P
   if (!table) throw new Error(`No table exists: ${tableName}`)
   const mappedSecurityProfile = typeof spAssignment === 'string' ?
     securityProfile :
-    mapSecurityProfile(securityProfile, spAssignment.insertExclusions, spAssignment.updateExclusions, true)
+    mapSecurityProfile(securityProfile, spAssignment.insertAllowances, spAssignment.updateAllowances, true)
 
   const tableScript = await computeTablePolicy(table, mappedSecurityProfile, roles, dropExistingRls)
   const removeRlsScript = await computeTableRemoveRls(table)

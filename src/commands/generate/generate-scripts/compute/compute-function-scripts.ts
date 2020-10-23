@@ -16,6 +16,7 @@ function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFun
   const DEFAULT = ' DEFAULT'
   const signatureArgumentDataTypes = fn ? fn.argumentDataTypes
   .split(',')
+  .map(adt => adt.replace('timestamp with time zone', 'timestamptz'))
   .map(adt => adt.trim().split(' ').slice(1).join(' '))
   .map(arg => (arg.indexOf(DEFAULT) === -1 ? arg : arg.slice(0, arg.indexOf(DEFAULT))))
   .join(',') : undefined

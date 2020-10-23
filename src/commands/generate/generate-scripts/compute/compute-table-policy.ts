@@ -15,6 +15,7 @@ async function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTab
 
           return {
             ...p
+            ,cmd: action
             ,roles: p.roles.join(", ")
             ,schemaName: table.schemaName
             ,tableName: table.tableName
@@ -51,10 +52,10 @@ async function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTab
         .map((tc: any) => tc.column_name)
         .filter((c:string) => exclusions.indexOf(c) === -1)
       const grantColumnsText = grantColumns.length > 0 ? `(${grantColumns.join(', ')})` : null
-      const columnExclusionsText = exclusions.length > 0 ? `\n       --  excluded columns for ${roleGrant.action}: ${exclusions.join(', ')}` : null 
+      const columnExclusionsText = exclusions.length > 0 ? `\n       --  excluded columns for ${roleGrant.action}: ${exclusions.join(', ')}` : null
 
       return [...otherGrants, {
-        ...finalGrant, 
+        ...finalGrant,
         grants: [...finalGrant.grants.map((og: any) => { return {...og, comma: ','}}), {action: roleGrant.action, grantColumns: grantColumnsText, columnExclusionsText: columnExclusionsText}]
       }]
     }, []

@@ -20,6 +20,7 @@ ${allFunctionsScript}
     await writeFileSync(config.artifactPaths.ownershipPath, scriptSet.ownershipScript)
     await writeFileSync(config.artifactPaths.removeAllRlsPath, scriptSet.removeAllRlsScript)
     await writeFileSync(config.artifactPaths.createRolesPath, scriptSet.createRolesScript)
+    await writeFileSync(config.artifactPaths.schemaUsageSqlPath, scriptSet.schemaUsageSql)
 
     await writeFileSync(config.artifactPaths.oneScriptToRuleThemAllPath, oneScriptToRuleThemAll)
 }

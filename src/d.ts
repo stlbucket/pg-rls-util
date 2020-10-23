@@ -48,7 +48,7 @@ export interface PgrRoleGrantSet {
 }
 
 export interface PgrRlsPolicy {
-  cmd: string,
+  cmd?: string,
   qual: string | null,
   roles: string[],
   permissive: string,
@@ -85,14 +85,14 @@ export interface PgrTableSecurityProfileSet {
   tableSecurityProfiles: PgrTableSecurityProfile[]
 }
 
-export interface PgrExclusionSet {
+export interface PgrColumnAllowanceSet {
   tableSecurityProfileName: string,
-  insertExclusions: string[],
-  updateExclusions: string[]
+  insertAllowances: string[],
+  updateAllowances: string[]
 }
 
 export interface PgrTableAssignment {
-  [key: string]: string | PgrExclusionSet
+  [key: string]: string | PgrColumnAllowanceSet
 }
 
 export interface PgrSchemaTableProfileAssignmentSet {
@@ -226,6 +226,7 @@ export interface PgrScriptSet {
   masterTableScriptSet: PgrMasterTableScriptSet,
   masterFunctionScriptSet: PgrMasterFunctionScriptSet,
   ownershipScript: string,
+  schemaUsageSql: string,
   removeAllRlsScript: string,
   createRolesScript: string
 }

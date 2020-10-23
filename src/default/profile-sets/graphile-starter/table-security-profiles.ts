@@ -1,32 +1,34 @@
 import { PgrTableSecurityProfileSet } from "../../../d"
 
 const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
-  "defaultProfileName": "graphile-starter:: no-access",
+  "defaultProfileName": "no-access",
   "includeTableRlsRemoval": false,
   "defaultInsertExclusions": [
     "id",
-    "created_at"
+    "created_at",
+    "updated_at"
   ],
   "defaultUpdateExclusions": [
     "id",
-    "created_at"
+    "created_at",
+    "updated_at"
   ],
   "defaultInitialTableAssignments": [
     {
       "schemaName": "app_public",
       "tableAssignments": {
-        "organizations": "graphile-starter:: app_public.organizations",
-        "organization_memberships": "graphile-starter:: app_public.organization_memberships",
+        "organizations": "app_public.organizations",
+        "organization_memberships": "app_public.organization_memberships",
         "user_emails": {
-          "tableSecurityProfileName": "graphile-starter:: select,insert,update own",
-          "insertExclusions": ["id", "user_id", "is_primary", "is_verified", "created_at", "updated_at"],
-          "updateExclusions": ["id", "user_id", "is_primary", "is_verified", "created_at", "updated_at"]
+          "tableSecurityProfileName": "select-insert-update own",
+          "insertAllowances": ["email"],
+          "updateAllowances": ["email"]
         },
-        "user_authentications": "graphile-starter:: select-delete-own",
+        "user_authentications": "select-delete-own",
         "users": {
-          "tableSecurityProfileName": "graphile-starter:: app_public.users",
-          "insertExclusions": [],
-          "updateExclusions": ["id", "created_at", "is_admin", "is_verified", "updated_at"]
+          "tableSecurityProfileName": "app_public.users",
+          "insertAllowances": [],
+          "updateAllowances": ["username", "name", "avatar_url"]
         }
       },
       "viewAssignments": {}
@@ -34,7 +36,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
   ],
   "tableSecurityProfiles": [
     {
-      "name": "graphile-starter:: no-access",
+      "name": "no-access",
       "enableRls": true,
       "grants": {
         "ALL": [],
@@ -52,7 +54,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       }
     },
     {
-      "name": "graphile-starter:: select,insert,update own",
+      "name": "select-insert-update own",
       "enableRls": true,
       "grants": {
         "ALL": [],
@@ -78,8 +80,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "ALL": [],
         "SELECT": [
           {
-            "cmd": "SELECT",
-            "qual": "user_id \= app_public.current_user_id()",
+            "qual": "user_id = app_public.current_user_id()",
             "roles": [
               "graphile_starter_visitor"
             ],
@@ -90,26 +91,24 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         ],
         "INSERT": [
           {
-            "cmd": "INSERT",
             "qual": null,
             "roles": [
               "graphile_starter_visitor"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "insert_own",
-            "with_check": "user_id \= app_public.current_user_id()"
+            "with_check": "user_id = app_public.current_user_id()"
           }
         ],
         "UPDATE": [
           {
-            "cmd": "UPDATE",
-            "qual": null,
+            "qual": "user_id = app_public.current_user_id()",
             "roles": [
               "graphile_starter_visitor"
             ],
             "permissive": "PERMISSIVE",
-            "policyname": "delete_own",
-            "with_check": "user_id \= app_public.current_user_id()"
+            "policyname": "update_own",
+            "with_check": "user_id = app_public.current_user_id()"
           }
         ],
         "DELETE": [
@@ -117,7 +116,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       }
     },
     {
-      "name": "graphile-starter:: app_public.users",
+      "name": "app_public.users",
       "enableRls": true,
       "grants": {
         "ALL": [],
@@ -140,7 +139,6 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "ALL": [],
         "SELECT": [
           {
-            "cmd": "SELECT",
             "qual": "true",
             "roles": [
               "graphile_starter_visitor"
@@ -154,14 +152,13 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         ],
         "UPDATE": [
           {
-            "cmd": "UPDATE",
-            "qual": null,
+            "qual": "id = app_public.current_user_id()",
             "roles": [
               "graphile_starter_visitor"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "update_self",
-            "with_check": "id \= app_public.current_user_id()"
+            "with_check": "id = app_public.current_user_id()"
           }
         ],
         "DELETE": [
@@ -169,7 +166,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       }
     },
     {
-      "name": "graphile-starter:: app_public.organizations",
+      "name": "app_public.organizations",
       "enableRls": true,
       "grants": {
         "ALL": [],
@@ -193,7 +190,6 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "ALL": [],
         "SELECT": [
           {
-            "cmd": "SELECT",
             "qual": "id IN ( SELECT app_public.current_user_member_organization_ids() AS current_user_member_organization_ids)",
             "roles": [
               "graphile_starter_visitor"
@@ -203,7 +199,6 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
             "with_check": null
           },
           {
-            "cmd": "SELECT",
             "qual": "id IN ( SELECT app_public.current_user_invited_organization_ids() AS current_user_invited_organization_ids)",
             "roles": [
               "graphile_starter_visitor"
@@ -217,7 +212,6 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         ],
         "UPDATE": [
           {
-            "cmd": "UPDATE",
             "qual": null,
             "roles": [
               "graphile_starter_visitor"
@@ -232,7 +226,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       }
     },
     {
-      "name": "graphile-starter:: app_public.organization_memberships",
+      "name": "app_public.organization_memberships",
       "enableRls": true,
       "grants": {
         "ALL": [],
@@ -252,7 +246,6 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "ALL": [],
         "SELECT": [
           {
-            "cmd": "SELECT",
             "qual": "id IN ( SELECT app_public.current_user_member_organization_ids() AS current_user_member_organization_ids)",
             "roles": [
               "graphile_starter_visitor"
@@ -262,7 +255,6 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
             "with_check": null
           },
           {
-            "cmd": "SELECT",
             "qual": "id IN ( SELECT app_public.current_user_invited_organization_ids() AS current_user_invited_organization_ids)",
             "roles": [
               "graphile_starter_visitor"
@@ -281,7 +273,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       }
     },
     {
-      "name": "graphile-starter:: select-delete-own",
+      "name": "select-delete-own",
       "enableRls": true,
       "grants": {
         "ALL": [],
@@ -304,8 +296,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "ALL": [],
         "SELECT": [
           {
-            "cmd": "SELECT",
-            "qual": "user_id \= app_public.current_user_id()",
+            "qual": "user_id = app_public.current_user_id()",
             "roles": [
               "graphile_starter_visitor"
             ],
@@ -320,8 +311,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         ],
         "DELETE": [
           {
-            "cmd": "DELETE",
-            "qual": "user_id \= app_public.current_user_id()",
+            "qual": "user_id = app_public.current_user_id()",
             "roles": [
               "graphile_starter_visitor"
             ],

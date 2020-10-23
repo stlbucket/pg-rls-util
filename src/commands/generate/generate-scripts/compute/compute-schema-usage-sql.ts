@@ -1,6 +1,7 @@
+import { table } from 'console'
 import * as Mustache from 'mustache'
 import loadConfig from "../../../../config"
-import { PgrRole, PgrRoleGrant, PgrSchemaTableProfileAssignmentSet, PgrTableSecurityProfile } from '../../../../d'
+import { PgrRole, PgrRoleGrant, PgrSchemaTableProfileAssignmentSet, PgrTableSecurityProfile, PgrColumnAllowanceSet } from '../../../../d'
 
 async function computeSchemaUsageSql () {
   const config = await loadConfig()
@@ -12,13 +13,14 @@ async function computeSchemaUsageSql () {
     (tpaSet: PgrSchemaTableProfileAssignmentSet) => {
       const grantRolesList = Array.from(new Set(Object.values(tpaSet.tableAssignments)))
       .map(
-        (profileName: string) => {
+        (tableAssignment: string | PgrColumnAllowanceSet) => {
+          const profileName = typeof tableAssignment === 'string' ? tableAssignment : tableAssignment.tableSecurityProfileName
           const tsp = config.tableSecurityProfileSet.tableSecurityProfiles.find((tsp:PgrTableSecurityProfile) => tsp.name === profileName)
           if (!tsp) throw new Error(`No security profile: ${profileName}`)
           return Object.values(tsp.grants)
           .reduce(
             (all:string[], roleGrants: PgrRoleGrant[]) => {
-              return Array.from(new Set([...all, ...roleGrants.map(rg => rg.roleName)]))                
+              return Array.from(new Set([...all, ...roleGrants.map(rg => rg.roleName)]))
             }, []
           )
         }
