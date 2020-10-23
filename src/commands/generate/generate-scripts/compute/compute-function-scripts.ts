@@ -13,13 +13,18 @@ function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFun
     ,functionName: fn.functionName
   } : null
 
+  const DEFAULT = ' DEFAULT'
   const signatureArgumentDataTypes = fn ? fn.argumentDataTypes
   .split(',')
-  .map(adt => adt.replace('timestamp with time zone', 'timestamptz'))
-  .map(adt => adt.trim().split(' ')[1])
+  .map(adt => adt.trim().split(' ').slice(1).join(' '))
+  .map(arg => (arg.indexOf(DEFAULT) === -1 ? arg : arg.slice(0, arg.indexOf(DEFAULT))))
   .join(',') : undefined
 
   const functionSignature = fn ? `${schemaName}.${fn.functionName} (${signatureArgumentDataTypes})` : `{{functionSchema}}.{{functionName}} ({{signatureArgumentDataTypes}})`
+
+  // console.log(fn.argumentDataTypes)
+  // console.log(functionSignature)
+  // process.exit()
 
   const templateVariables = {
     schemaName: schemaName,
@@ -39,6 +44,7 @@ function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFun
 
 async function computeSchemaFunctionScripts(schemaFunctionAssignmentSet: PgrFunctionSecurityProfileAssignmentSet, securityProfiles: PgrFunctionSecurityProfile[], roles: PgrRoleSet, introspection: PgrDbIntrospection): Promise<PgrSchemaFunctionScriptSet>{
   const p = Object.keys(schemaFunctionAssignmentSet.functionAssignments)
+    .filter(k => k === 'organization_for_invitation')
     .map(
       async (functionName: string) => {
         const fn = introspection.schemaTree
