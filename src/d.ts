@@ -160,7 +160,8 @@ export interface PgrConfig {
   functionSecurityProfileAssignments: PgrFunctionSecurityProfileAssignmentSet[],
   currentDiff: PgrDiffSummary,
   artifactPaths: PgrArtifactPathSet,
-  scriptTemplates: PgrScriptTemplateSet
+  scriptTemplates: PgrScriptTemplateSet,
+  generateOptions: PgrGenerateOptions
 }
 
 export interface PgrArtifactPathSet {
@@ -179,7 +180,8 @@ export interface PgrArtifactPathSet {
   removeAllRlsPath: string,
   schemaUsageSqlPath: string,
   dbConfigPath: string,
-  projectConfigPath: string
+  projectConfigPath: string,
+  generateOptionsPath: string
 }
 
 export interface PgrDiffSummary {
@@ -246,4 +248,16 @@ export interface PgrScriptTemplateSet {
   tablePolicyTemplate: string,
   rolesTemplate: string,
   dropExistingRlsPoliciesTemplate: string
+}
+
+export interface PgrScriptGenerateOptions {
+  includeRemoveRls: Boolean
+  includeOwnership: Boolean
+  includeSchemaUsage: Boolean
+  includeTableSecurity: Boolean
+  includeFunctionSecurity: Boolean
+}
+
+export interface PgrGenerateOptions {
+  masterScript: PgrScriptGenerateOptions
 }

@@ -1,8 +1,8 @@
 import {existsSync, readFileSync} from 'fs'
 import { ConnectionConfig } from 'pg'
-import { PgrConfig, PgrDiffSummary, PgrFunctionSecurityProfileAssignmentSet, PgrFunctionSecurityProfileSet, PgrProjectConfig, PgrRoleSet, PgrSchemaTableProfileAssignmentSet, PgrScriptTemplateSet, PgrTableSecurityProfileSet } from './d'
+import { PgrConfig, PgrDiffSummary, PgrFunctionSecurityProfileAssignmentSet, PgrFunctionSecurityProfileSet, PgrGenerateOptions, PgrProjectConfig, PgrRoleSet, PgrSchemaTableProfileAssignmentSet, PgrScriptTemplateSet, PgrTableSecurityProfileSet } from './d'
 
-const baseDirectory = process.env.PGR_WORK_DIR || `${process.cwd()}/.pgrlsgen`
+const baseDirectory = process.env.PGR_WORK_DIR || `${process.cwd()}/pg-rls-util-gen`
 const releasesDirectory = `${baseDirectory}/releases`
 
 // current-draft paths
@@ -18,6 +18,7 @@ const scriptTemplatesPath = `${currentDraftDirectory}/script-templates.json`
 const currentDiffPath = `${currentDraftDirectory}/current-diff.json`
 const dbConfigPath = `${currentDraftDirectory}/db-config.json`
 const projectConfigPath = `${currentDraftDirectory}/project-config.json`
+const generateOptionsPath = `${currentDraftDirectory}/generate-options.json`
 
 // artifact paths
 const artifactsDirectory = `${currentDraftDirectory}/artifacts`
@@ -78,6 +79,7 @@ async function loadConfig(argv?: any): Promise<PgrConfig> {
   const functionSecurityProfileAssignments: PgrFunctionSecurityProfileAssignmentSet[] = await loadOneConfigFile(functionProfileAssignmentsPath)
   const scriptTemplates: PgrScriptTemplateSet = await loadOneConfigFile(scriptTemplatesPath)
   const currentDiff: PgrDiffSummary = await loadOneConfigFile(currentDiffPath)
+  const generateOptions: PgrGenerateOptions = await loadOneConfigFile(generateOptionsPath)
 
   config = {
     argv: argv,
@@ -110,9 +112,11 @@ async function loadConfig(argv?: any): Promise<PgrConfig> {
       oneScriptToRuleThemAllPath: oneScriptToRuleThemAllPath,
       schemaUsageSqlPath: schemaUsageSqlPath,
       dbConfigPath: dbConfigPath,
-      projectConfigPath: projectConfigPath
+      projectConfigPath: projectConfigPath,
+      generateOptionsPath: generateOptionsPath
     },
-    scriptTemplates: scriptTemplates
+    scriptTemplates: scriptTemplates,
+    generateOptions: generateOptions
   }
 
   return config

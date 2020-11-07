@@ -175,29 +175,6 @@ $body$;
 --||--
 ---------- END DB OWNER ROLE -----------
 
-------------  DB AUTHENTICATOR ROLE ------------
-DO
-$body$
-BEGIN
-  IF NOT EXISTS (
-    SELECT    *
-    FROM   pg_catalog.pg_roles
-    WHERE  rolname = '{{dbAuthenticatorRole.roleName}}')
-  THEN
-    CREATE ROLE {{dbAuthenticatorRole.roleName}};
-  END IF;
-
-ALTER ROLE {{dbAuthenticatorRole.roleName}} with LOGIN;
-ALTER ROLE {{dbAuthenticatorRole.roleName}} with NOINHERIT;
-
-{{#dbUserRoles}}
-GRANT {{roleName}} TO {{dbAuthenticatorRole.roleName}};
-{{/dbUserRoles}}
-END
-$body$;
---||--
----------- END DB AUTHENTICATOR ROLE -----------
-
 ---------- DB USER ROLES -----------
 {{#dbUserRoles}}
 
@@ -223,6 +200,30 @@ $body$;
     -------- END {{roleName}}
 {{/dbUserRoles}}
 ---------- END USER ROLES ----------
+
+------------  DB AUTHENTICATOR ROLE ------------
+DO
+$body$
+BEGIN
+  IF NOT EXISTS (
+    SELECT    *
+    FROM   pg_catalog.pg_roles
+    WHERE  rolname = '{{dbAuthenticatorRole.roleName}}')
+  THEN
+    CREATE ROLE {{dbAuthenticatorRole.roleName}};
+  END IF;
+
+ALTER ROLE {{dbAuthenticatorRole.roleName}} with LOGIN;
+ALTER ROLE {{dbAuthenticatorRole.roleName}} with NOINHERIT;
+
+{{#dbUserRoles}}
+GRANT {{roleName}} TO {{dbAuthenticatorRole.roleName}};
+{{/dbUserRoles}}
+END
+$body$;
+--||--
+---------- END DB AUTHENTICATOR ROLE -----------
+
 `
 }
 

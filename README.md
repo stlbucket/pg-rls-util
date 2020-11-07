@@ -30,7 +30,7 @@ perform intial db introspection and table assignment.  the default configuration
 ```
 npx pg-rls-util init -x -c postgres://[USER]:[PWD]@[HOST]:[PORT]/[DB_NAME] -s app_hidden,app_private,app_public -p graphile-starter
 ```
-### review files in .pgrlsgen/current-draft directory
+### review files in pg-rls-util-gen/current-draft directory
 - roles.json: not really meant to be edited, but it could be
   - graphile_starter
   - graphile_starter_authenticator
@@ -61,11 +61,11 @@ scripts created include:
 
 each schema will have rollup scripts as well as function and table scripts to quickly view the impact of a portion of the overall security policy on just one table. 
 
-for instance, *.pgrlsgen/current-draft/artifacts/app_public/tableScripts/users.sql*
+for instance, *pg-rls-util-gen/current-draft/artifacts/app_public/tableScripts/users.sql*
 ```
 -- to run this sql:
 --
--- psql -h 0.0.0.0 -U postgres -d graphile_starter -f /Users/buckfactor/tmp/.pgrlsgen/current-draft/artifacts/app_public/tableScripts/users.sql
+-- psql -h 0.0.0.0 -U postgres -d graphile_starter -f /Users/buckfactor/tmp/pg-rls-util-gen/current-draft/artifacts/app_public/tableScripts/users.sql
 
 -- this script is meant to used during development                    ----------------------
 -- to give a quick view of the before and after state for table:      app_public.users

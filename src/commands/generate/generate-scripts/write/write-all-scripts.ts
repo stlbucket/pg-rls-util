@@ -12,7 +12,20 @@ async function writeAllScripts(scriptSet: PgrScriptSet) {
 
     const allTablesScript = await writeAllTableScripts(scriptSet.masterTableScriptSet)
     const allFunctionsScript = await writeAllFunctionScripts(scriptSet.masterFunctionScriptSet)
+    console.log(config.generateOptions)
     const oneScriptToRuleThemAll = `
+---------**************  REMOVE EXISTING RLS
+${config.generateOptions.masterScript.includeRemoveRls ? scriptSet.removeAllRlsScript : `------ ***** EXISTING RLS POLICIES NOT AFFECTED`}
+---------**************  REMOVE EXISTING RLS -- END OF SECTION
+
+---------**************  OWNERSHIP
+${config.generateOptions.masterScript.includeOwnership ? scriptSet.ownershipScript : `------ ***** EXISTING OWNERSHIP NOT AFFECTED`}
+---------**************  OWNERSHIP -- END OF SECTION
+
+---------**************  SCHEMA USAGE
+${config.generateOptions.masterScript.includeSchemaUsage ? scriptSet.schemaUsageSql : `------ ***** EXISTING OWNERSHIP NOT AFFECTED`}
+---------**************  END SCHEMA USAGE -- END OF SECTION
+
 ${allTablesScript}
 
 ${allFunctionsScript}

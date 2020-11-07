@@ -1,31 +1,23 @@
 import { PgrRoleSet } from "../../../d"
 
 const roleSet: PgrRoleSet = {
-  "name": "soro-anon",
+  "name": "app-jwt",
   "dbOwnerRole": {
-    "roleName": "soro",
+    "roleName": "app_owner",
     "applicableRoles": []
   },
   "dbAuthenticatorRole": {
-    "roleName": "postgres",
-    "applicableRoles": [ "soro_admin", "soro_user","soro_anonymous" ]
+    "roleName": "app_authenticator",
+    "applicableRoles": [ "app_visitor", "app_anonymous" ]
   },
   "dbUserRoles": [
     {
-      "roleName": "soro_super_admin",
+      "roleName": "app_anonymous",
       "applicableRoles": []
     },
     {
-      "roleName": "soro_admin",
-      "applicableRoles": []
-    },
-    {
-      "roleName": "soro_user",
-      "applicableRoles": []
-    },
-    {
-      "roleName": "soro_anonymous",
-      "applicableRoles": []
+      "roleName": "app_visitor",
+      "applicableRoles": ["app_anonymous"]
     }
   ]
 }

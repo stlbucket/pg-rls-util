@@ -3,6 +3,7 @@ import getDefaultTableSecurityProfiles from '../../default/default-table-securit
 import getDefaultFunctionSecurityProfiles from '../../default/default-function-security-profiles'
 import getDefaultPgrRoleSet from '../../default/default-role-set'
 import defaultScriptTemplates from '../../default/default-script-templates'
+import defaultGenerateOptions from '../../default/default-generate-options'
 import { PgrConfig, PgrDbIntrospection } from '../../d'
 import calcTableProfileAssignments from './calcTableProfileAssignments'
 import calcFunctionSecurityProfileAssignments from './calcFunctionSecurityProfileAssignments'
@@ -27,9 +28,9 @@ async function  buildCurrentDraftDir(argv: any, config: PgrConfig, introspection
 
   const currentDraftDirExists = await existsSync(config.currentDraftDirectory)
   if (!currentDraftDirExists) {
-    const defaultPgrRoleSet = await getDefaultPgrRoleSet(argv.roleSet)
-    const defaultTableSecurityProfiles = await getDefaultTableSecurityProfiles(argv.roleSet)
-    const defaultFunctionSecurityProfiles = await getDefaultFunctionSecurityProfiles(argv.roleSet)
+    const defaultPgrRoleSet = await getDefaultPgrRoleSet(argv.profileSet)
+    const defaultTableSecurityProfiles = await getDefaultTableSecurityProfiles(argv.profileSet)
+    const defaultFunctionSecurityProfiles = await getDefaultFunctionSecurityProfiles(argv.profileSet)
 
     await mkdirSync(config.currentDraftDirectory)
     await mkdirSync(`${config.currentDraftDirectory}/json-schema`)
@@ -47,6 +48,7 @@ async function  buildCurrentDraftDir(argv: any, config: PgrConfig, introspection
     await writeOnefile(tableProfileAssignments, config.artifactPaths.tableProfileAssignmentsPath)
     await writeOnefile(functionProfileAssignments, config.artifactPaths.functionProfileAssignmentsPath)
     await writeOnefile(defaultScriptTemplates, config.artifactPaths.scriptTemplatesPath)
+    await writeOnefile(defaultGenerateOptions, config.artifactPaths.generateOptionsPath)
 
     // await writeFileSync(config.artifactPaths.tableProfileAssignmentsPath, JSON.stringify(tableProfileAssignments,null,2))
     // await writeFileSync(config.artifactPaths.functionProfileAssignmentsPath, JSON.stringify(functionProfileAssignments,null,2))

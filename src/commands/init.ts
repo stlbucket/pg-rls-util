@@ -30,7 +30,7 @@ const builder: CommandBuilder = {
   s: { type: 'string', alias: 'schemata', description: 'a comma-delimited string of database schemas to work with'},
   f: { type: 'boolean', alias: 'force', description: 'will reset the current-draft to the previous version or to default if this is a new project' },
   x: { type: 'boolean', alias: 'forceAll', description: 'will reset the entire project' },
-  p: { type: 'string', alias: 'profile-set', description: 'the rls-strategy profile-set starter for this project', choices: ['graphile-starter', 'app-visitor', 'app-with-admin', 'other'], demandOption: true},
+  p: { type: 'string', alias: 'profile-set', description: 'the rls-strategy profile-set starter for this project', choices: ['graphile-starter', 'app-jwt', 'app-with-admin', 'other'], demandOption: true},
   q: { type: 'string', alias: 'custom-profile-set', description: 'path to json file defining rls-strategy profile-set starter for this project.  used in conjunction with "custom" profile set option', demandOption: false}
 }
 const deprecated = false

@@ -28,7 +28,7 @@ build/
 # Misc
 .DS_Store
 
-/.pgrlsgen
+/pg-rls-util-gen
 
 /checkpoint
 
