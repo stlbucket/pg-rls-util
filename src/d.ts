@@ -17,7 +17,9 @@ export interface PgrFunction {
   functionName: string,
   resultDataType: string,
   argumentDataTypes: string,
-  definition: string
+  definition: string,
+  isFromExtension: boolean,
+  isSecurityDefiner: boolean
 }
 
 export interface PgrSchema {
@@ -122,6 +124,7 @@ export interface PgrFunctionSecurityProfile {
 
 export interface PgrFunctionSecurityProfileSet {
   defaultProfileName: string,
+  disableSecurityDefinerOwnershipGrants: boolean,
   defaultInitialFunctionAssignments: PgrSchemaFunctionProfileAssignmentSet[],
   functionSecurityProfiles: PgrFunctionSecurityProfile[]
 }
@@ -148,7 +151,7 @@ export interface PgrConfig {
   argv: any,
   projectConfig: PgrProjectConfig,
   dbConfig: ConnectionConfig,
-  schemata: string,
+  schemata?: string,
   baseDirectory: string,
   currentDraftDirectory: string,
   artifactsDirectory: string,

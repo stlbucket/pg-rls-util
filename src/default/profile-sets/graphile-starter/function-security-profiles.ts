@@ -2,6 +2,7 @@ import { PgrFunctionSecurityProfileSet } from "../../../d"
 
 const functionSecurityProfileSet: PgrFunctionSecurityProfileSet = {
   "defaultProfileName": "graphile-starter-no-access",
+  "disableSecurityDefinerOwnershipGrants": true,
   "defaultInitialFunctionAssignments": [
     {
       "schemaName": "app_public",
@@ -37,7 +38,7 @@ const functionSecurityProfileSet: PgrFunctionSecurityProfileSet = {
         "users_has_password": "graphile-visitor-execute",
         "verify_email": "graphile-visitor-execute"
       }
-    }  
+    }
   ],
   "functionSecurityProfiles": [
     {

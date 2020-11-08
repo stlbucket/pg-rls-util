@@ -2,6 +2,7 @@ import { PgrFunctionSecurityProfileSet } from "../../../d"
 
 const functionSecurityProfileSet: PgrFunctionSecurityProfileSet = {
   "defaultProfileName": "app-visitor-execute",
+  "disableSecurityDefinerOwnershipGrants": false,
   "defaultInitialFunctionAssignments": [],
   "functionSecurityProfiles": [
     {

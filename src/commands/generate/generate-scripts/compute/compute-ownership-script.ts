@@ -5,22 +5,15 @@ import loadConfig from '../../../../config'
 async function computeOwnershipPolicy (introspection: PgrDbIntrospection) {
   const config = await loadConfig()
 
-  const DEFAULT = ' DEFAULT'
   const sortedSchemata = introspection.schemaTree
   .map((s:PgrSchema)=>{
     return {
       ...s,
-      schemaFunctions: s.schemaFunctions.map(f=>{
-        const argumentDataTypes = f.argumentDataTypes
-        .split(',')
-        .map(adt => adt.replace('timestamp with time zone', 'timestamptz'))
-        .map(adt => adt.trim().split(' ').slice(1).join(' '))
-        .map(arg => (arg.indexOf(DEFAULT) === -1 ? arg : arg.slice(0, arg.indexOf(DEFAULT))))
-        .join(',')
-
+      schemaFunctions: s.schemaFunctions
+      .map(fn=>{
         return {
-          ...f,
-          argumentDataTypes: argumentDataTypes
+          ...fn,
+          excludeSecurityDefiner: config.functionSecurityProfileSet.disableSecurityDefinerOwnershipGrants ? fn.isSecurityDefiner : false
         }
       })
     }

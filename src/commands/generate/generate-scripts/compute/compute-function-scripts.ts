@@ -3,7 +3,26 @@ import loadConfig from '../../../../config'
 import {PgrRoleSet, PgrFunction, PgrFunctionSecurityProfile, PgrSchema, PgrRole, PgrFunctionSecurityProfileAssignmentSet, PgrMasterFunctionScriptSet, PgrSchemaFunctionProfileAssignmentSet, PgrSchemaFunctionScriptSet, PgrFunctionScript, PgrConfig, PgrFunctionSecurityProfileSet, PgrDbIntrospection} from "../../../../d"
 let config: PgrConfig
 
+function computeFunctionSignature(fn: PgrFunction) {
+  const schemaName = fn.functionSchema
+  const DEFAULT = ' DEFAULT'
+
+  const signatureArgumentDataTypes = fn.argumentDataTypes
+  // const signatureArgumentDataTypes = fn.isFromExtension ? fn.argumentDataTypes : fn.argumentDataTypes
+  // .split(',')
+  // .map(adt => adt.replace('timestamp with time zone', 'timestamptz'))
+  // .map(adt => adt.trim().split(' ').slice(1).join(' '))
+  // .map(arg => (arg.indexOf(DEFAULT) === -1 ? arg : arg.slice(0, arg.indexOf(DEFAULT))))
+  // .join(',')
+
+  const functionSignature = fn ? `${schemaName}.${fn.functionName} (${signatureArgumentDataTypes})` : `{{functionSchema}}.{{functionName}} ({{signatureArgumentDataTypes}})`
+
+  return functionSignature
+}
+
 function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFunctionSecurityProfile, roles: PgrRoleSet) {
+  if (fn.isFromExtension) return `----  function ${fn.functionName} is from an extension.  no grants are affected.`
+
   const schemaName = fn.functionSchema
   const revokeRolesList = ['public', ...roles.dbUserRoles.map((r:PgrRole) => r.roleName)].join(',\n       ')
   const roleGrant = functionSecurityProfile.grants.EXECUTE.length > 0 ? {
@@ -13,19 +32,7 @@ function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFun
     ,functionName: fn.functionName
   } : null
 
-  const DEFAULT = ' DEFAULT'
-  const signatureArgumentDataTypes = fn ? fn.argumentDataTypes
-  .split(',')
-  .map(adt => adt.replace('timestamp with time zone', 'timestamptz'))
-  .map(adt => adt.trim().split(' ').slice(1).join(' '))
-  .map(arg => (arg.indexOf(DEFAULT) === -1 ? arg : arg.slice(0, arg.indexOf(DEFAULT))))
-  .join(',') : undefined
-
-  const functionSignature = fn ? `${schemaName}.${fn.functionName} (${signatureArgumentDataTypes})` : `{{functionSchema}}.{{functionName}} ({{signatureArgumentDataTypes}})`
-
-  // console.log(fn.argumentDataTypes)
-  // console.log(functionSignature)
-  // process.exit()
+  const functionSignature = computeFunctionSignature(fn)
 
   const templateVariables = {
     schemaName: schemaName,

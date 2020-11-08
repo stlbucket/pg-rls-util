@@ -6,7 +6,8 @@ let config: PgrConfig
 
 async function introspectDb(): Promise<PgrDbIntrospection> {
   config = await loadConfig()
-  const sql = await buildQuery(config.schemata)
+  const schemata = config.schemata ? [...config.schemata.split(',').filter(s => s !== 'public'), 'public'].join(',') : null
+  const sql = await buildQuery(schemata)
   const introspection = (await doQuery(sql)).rows
   const mappedSchemaTree = introspection[0].schema_tree
   .map(

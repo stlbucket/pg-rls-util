@@ -35,7 +35,12 @@ const scriptTemplates: PgrScriptTemplateSet = {
   {{/schemaTables}}
   -- functions
   {{#schemaFunctions}}
+    {{#excludeSecurityDefiner}}
+    ---- function is security definer - no ownership changes {{schemaName}}.{{functionName}}({{argumentDataTypes}})
+    {{/excludeSecurityDefiner}}
+    {{^excludeSecurityDefiner}}
     ALTER FUNCTION {{schemaName}}.{{functionName}}({{argumentDataTypes}}) OWNER TO {{dbOwnerRole}};
+    {{/excludeSecurityDefiner}}
   {{/schemaFunctions}}
 ----------  END SCHEMA: {{schemaName}}
 {{/schemata}}

@@ -1,8 +1,12 @@
 
 async function buildQuery(schemas: string) {
   try {
+    const whereClause = schemas ?
+      `where schema_name in ('${schemas.split(',').map(s=>s.trim()).join("','")}')` :
+      `where schema_name != 'information_schema' and schema_name not like 'pg_%'`
+
     const querySql = `
-    SELECT 
+    SELECT
       (
         select coalesce((array_to_json(array_agg(row_to_json(er))))::jsonb, '[]')
         from (
@@ -31,7 +35,7 @@ async function buildQuery(schemas: string) {
       ,(
         select coalesce((array_to_json(array_agg(row_to_json(s))))::jsonb, '[]'::jsonb)
         FROM (
-          select 
+          select
             s.*
             ,'schema' __typename
             ,s.schema_name id
@@ -113,8 +117,26 @@ async function buildQuery(schemas: string) {
                   ,p.proname "functionName"
                   ,n.nspname "functionSchema"
                   ,coalesce(pg_catalog.pg_get_function_result(p.oid), 'N/A') "resultDataType"
-                  ,coalesce(pg_catalog.pg_get_function_arguments(p.oid), 'N/A') "argumentDataTypes"
+                  ,(
+                    with tp as (
+                      select
+                        *
+                      from unnest(p.proargtypes) with ordinality pat(typname, rn)
+                    )
+                    ,tn as (
+                      select
+                        case when pt.typtype not in ('b') then ns.nspname || '.' || pt.typname else pt.typname end as typname
+                        ,tp.rn
+                      from pg_catalog.pg_type pt
+                      join tp on tp.typname = pt.oid
+                      join pg_catalog.pg_namespace ns on ns.oid = pt.typnamespace
+                    )
+                    select coalesce(array_agg(tn.typname order by rn)::text[],'{}'::text[])
+                    from tn
+                  ) "argumentDataTypes"
                   ,coalesce(pg_catalog.pg_get_functiondef(p.oid)::text, 'N/A') "definition"
+                  ,(select position('$libdir' in pg_catalog.pg_get_functiondef(p.oid)::text) > 0) "isFromExtension"
+                  ,p.prosecdef "isSecurityDefiner"
                   from pg_catalog.pg_proc p
                   left join pg_catalog.pg_namespace n ON n.oid = p.pronamespace
                   where n.nspname = s.schema_name
@@ -123,7 +145,7 @@ async function buildQuery(schemas: string) {
               ) sf
             ) schema_functions
           from information_schema.schemata s
-          where schema_name in ('${schemas.split(',').map(s=>s.trim()).join("','")}')
+          ${whereClause}
         ) s
       ) schema_tree
   ;
