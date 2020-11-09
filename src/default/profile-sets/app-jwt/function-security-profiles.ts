@@ -15,6 +15,12 @@ const functionSecurityProfileSet: PgrFunctionSecurityProfileSet = {
       "grants": {
         "EXECUTE": ["app_visitor"],
       }
+    },
+    {
+      "name": "app-anonymous-execute",
+      "grants": {
+        "EXECUTE": ["app_anonymous"],
+      }
     }
   ]
 }
