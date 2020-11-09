@@ -2,7 +2,6 @@ import { PgrFunctionSecurityProfileSet } from "../../../d"
 
 const functionSecurityProfileSet: PgrFunctionSecurityProfileSet = {
   "defaultProfileName": "graphile-starter-no-access",
-  "disableSecurityDefinerOwnershipGrants": true,
   "defaultInitialFunctionAssignments": [
     {
       "schemaName": "app_public",

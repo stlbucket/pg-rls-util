@@ -124,7 +124,6 @@ export interface PgrFunctionSecurityProfile {
 
 export interface PgrFunctionSecurityProfileSet {
   defaultProfileName: string,
-  disableSecurityDefinerOwnershipGrants: boolean,
   defaultInitialFunctionAssignments: PgrSchemaFunctionProfileAssignmentSet[],
   functionSecurityProfiles: PgrFunctionSecurityProfile[]
 }
@@ -261,6 +260,11 @@ export interface PgrScriptGenerateOptions {
   includeFunctionSecurity: Boolean
 }
 
+export interface PgrFunctionScriptGenerateOptions {
+  disableSecurityDefinerOwnershipGrants: boolean
+}
+
 export interface PgrGenerateOptions {
-  masterScript: PgrScriptGenerateOptions
+  masterScript: PgrScriptGenerateOptions,
+  functionScripts: PgrFunctionScriptGenerateOptions
 }

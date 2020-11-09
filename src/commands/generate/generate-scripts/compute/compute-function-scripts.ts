@@ -5,15 +5,8 @@ let config: PgrConfig
 
 function computeFunctionSignature(fn: PgrFunction) {
   const schemaName = fn.functionSchema
-  const DEFAULT = ' DEFAULT'
 
   const signatureArgumentDataTypes = fn.argumentDataTypes
-  // const signatureArgumentDataTypes = fn.isFromExtension ? fn.argumentDataTypes : fn.argumentDataTypes
-  // .split(',')
-  // .map(adt => adt.replace('timestamp with time zone', 'timestamptz'))
-  // .map(adt => adt.trim().split(' ').slice(1).join(' '))
-  // .map(arg => (arg.indexOf(DEFAULT) === -1 ? arg : arg.slice(0, arg.indexOf(DEFAULT))))
-  // .join(',')
 
   const functionSignature = fn ? `${schemaName}.${fn.functionName} (${signatureArgumentDataTypes})` : `{{functionSchema}}.{{functionName}} ({{signatureArgumentDataTypes}})`
 
@@ -52,7 +45,6 @@ function computeFunctionPolicy (fn: PgrFunction, functionSecurityProfile: PgrFun
 
 async function computeSchemaFunctionScripts(schemaFunctionAssignmentSet: PgrFunctionSecurityProfileAssignmentSet, securityProfiles: PgrFunctionSecurityProfile[], roles: PgrRoleSet, introspection: PgrDbIntrospection): Promise<PgrSchemaFunctionScriptSet>{
   const p = Object.keys(schemaFunctionAssignmentSet.functionAssignments)
-    // .filter(k => k === 'link_or_register_user')
     .map(
       async (functionName: string) => {
         const fn = introspection.schemaTree

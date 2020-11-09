@@ -13,7 +13,7 @@ async function computeOwnershipPolicy (introspection: PgrDbIntrospection) {
       .map(fn=>{
         return {
           ...fn,
-          excludeSecurityDefiner: config.functionSecurityProfileSet.disableSecurityDefinerOwnershipGrants ? fn.isSecurityDefiner : false
+          excludeSecurityDefiner: config.generateOptions.functionScripts.disableSecurityDefinerOwnershipGrants ? fn.isSecurityDefiner : false
         }
       })
     }

@@ -7,6 +7,9 @@ const generateOptions: PgrGenerateOptions = {
     "includeOwnership": true,
     "includeTableSecurity": true,
     "includeFunctionSecurity": true
+  },
+  "functionScripts": {
+    "disableSecurityDefinerOwnershipGrants": true
   }
 }
 

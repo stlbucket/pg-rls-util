@@ -2,7 +2,6 @@ import { PgrFunctionSecurityProfileSet } from "../../../d"
 
 const functionSecurityProfileSet: PgrFunctionSecurityProfileSet = {
   "defaultProfileName": "super-admin-execute",
-  "disableSecurityDefinerOwnershipGrants": true,
   "defaultInitialFunctionAssignments": [],
   "functionSecurityProfiles": [
     {
