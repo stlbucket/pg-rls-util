@@ -1,7 +1,7 @@
 import { PgrTableSecurityProfileSet } from "../../../d"
 
 const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
-  "defaultProfileName": "all-access",
+  "defaultProfileName": "all-select",
   "includeTableRlsRemoval": true,
   "defaultInsertExclusions": [
     "id",
@@ -11,7 +11,35 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
     "id",
     "created_at"
   ],
-  "defaultInitialTableAssignments": [],
+  "defaultInitialTableAssignments": [
+    {
+      "schemaName": "auth",
+      "tableAssignments": {
+        "app_user": "app-user-access-direct",
+        "app_tenant": "app-tenant-access-direct"
+      },
+      "viewAssignments": {}
+    },
+    {
+      "schemaName": "app",
+      "tableAssignments": {
+        "license": "app-license-assigned-to",
+        "license_permission": "app-license-permission-assigned-to",
+        "app_tenant_subscription": "app-tenant-select"
+      },
+      "viewAssignments": {}
+    },
+    {
+      "schemaName": "org",
+      "tableAssignments": {
+        "organization": "app-tenant-select",
+        "contact": "app-tenant-select",
+        "facility": "app-tenant-select",
+        "location": "app-tenant-select",
+      },
+      "viewAssignments": {}
+    }
+  ],
   "tableSecurityProfiles": [
     {
       "name": "no-access",
@@ -58,6 +86,230 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
           }
         ],
         "SELECT": [],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      }
+    },
+    {
+      "name": "all-select",
+      "enableRls": true,
+      "grants": {
+        "ALL": [],
+        "SELECT": [
+          {
+            "roleName": "app_visitor"
+          }
+        ],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      },
+      "policies": {
+        "ALL": [],
+        "SELECT": [
+          {
+            "using": "true",
+            "roles": [
+              "app_visitor"
+            ],
+            "permissive": "PERMISSIVE",
+            "policyname": "all_select",
+            "with_check": null
+          }
+        ],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      }
+    },
+    {
+      "name": "app-tenant-access-direct",
+      "enableRls": true,
+      "grants": {
+        "ALL": [
+          {
+            "roleName": "app_visitor"
+          }
+        ],
+        "SELECT": [],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      },
+      "policies": {
+        "ALL": [
+          {
+            "using": "(id = auth_fn.current_app_tenant_id())",
+            "roles": [
+              "app_visitor"
+            ],
+            "permissive": "PERMISSIVE",
+            "policyname": "all_access",
+            "with_check": null
+          }
+        ],
+        "SELECT": [],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      }
+    },
+    {
+      "name": "app-tenant-access",
+      "enableRls": true,
+      "grants": {
+        "ALL": [
+          {
+            "roleName": "app_visitor"
+          }
+        ],
+        "SELECT": [],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      },
+      "policies": {
+        "ALL": [
+          {
+            "using": "(app_tenant_id = auth_fn.current_app_tenant_id())",
+            "roles": [
+              "app_visitor"
+            ],
+            "permissive": "PERMISSIVE",
+            "policyname": "all_access",
+            "with_check": null
+          }
+        ],
+        "SELECT": [],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      }
+    },
+    {
+      "name": "app-tenant-select",
+      "enableRls": true,
+      "grants": {
+        "ALL": [],
+        "SELECT": [
+          {
+            "roleName": "app_visitor"
+          }
+        ],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      },
+      "policies": {
+        "ALL": [],
+        "SELECT": [
+          {
+            "using": "(app_tenant_id = auth_fn.current_app_tenant_id())",
+            "roles": [
+              "app_visitor"
+            ],
+            "permissive": "PERMISSIVE",
+            "policyname": "app_tenant_select",
+            "with_check": null
+          }
+        ],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      }
+    },
+    {
+      "name": "app-user-access-direct",
+      "enableRls": true,
+      "grants": {
+        "ALL": [
+          {
+            "roleName": "app_visitor"
+          }
+        ],
+        "SELECT": [],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      },
+      "policies": {
+        "ALL": [
+          {
+            "using": "(id = auth_fn.current_app_user_id())",
+            "roles": [
+              "app_visitor"
+            ],
+            "permissive": "PERMISSIVE",
+            "policyname": "all_access",
+            "with_check": null
+          }
+        ],
+        "SELECT": [],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      }
+    },
+    {
+      "name": "app-license-assigned-to",
+      "enableRls": true,
+      "grants": {
+        "ALL": [],
+        "SELECT": [
+          {
+            "roleName": "app_visitor"
+          }
+        ],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      },
+      "policies": {
+        "ALL": [],
+        "SELECT": [
+          {
+            "using": "(assigned_to_app_user_id = auth_fn.current_app_user_id())",
+            "roles": [
+              "app_visitor"
+            ],
+            "permissive": "PERMISSIVE",
+            "policyname": "assigned_to",
+            "with_check": null
+          }
+        ],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      }
+    },
+    {
+      "name": "app-license-permission-assigned-to",
+      "enableRls": true,
+      "grants": {
+        "ALL": [],
+        "SELECT": [
+          {
+            "roleName": "app_visitor"
+          }
+        ],
+        "INSERT": [],
+        "UPDATE": [],
+        "DELETE": []
+      },
+      "policies": {
+        "ALL": [],
+        "SELECT": [
+          {
+            "using": "(license_id in (select id from app.license where assigned_to_app_user_id = auth_fn.current_app_user_id()))",
+            "roles": [
+              "app_visitor"
+            ],
+            "permissive": "PERMISSIVE",
+            "policyname": "license_assigned_to",
+            "with_check": null
+          }
+        ],
         "INSERT": [],
         "UPDATE": [],
         "DELETE": []

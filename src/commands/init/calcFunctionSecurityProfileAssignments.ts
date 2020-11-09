@@ -1,4 +1,4 @@
-import { PgrFunctionSecurityProfileSet, PgrSchema, PgrSchemaFunctionProfileAssignmentSet } from '../../d'
+import { PgrFunction, PgrFunctionSecurityProfileSet, PgrSchema, PgrSchemaFunctionProfileAssignmentSet } from '../../d'
 
 
 // defaultInitialFunctionAssignments
@@ -10,7 +10,9 @@ async function  calcFunctionSecurityProfileAssignments(introspection: any, funct
         functionAssignments: {}
       }
 
-      const functionAssignments = s.schemaFunctions.reduce(
+      const functionAssignments = s.schemaFunctions
+      .filter((f: PgrFunction) => !f.isFromExtension)
+      .reduce(
         (a: any, f: any) => {
           const initialFunctionProfileName = schemaDefaultInitialAssignments.functionAssignments[f.functionName] || functionSecurityProfileSet.defaultProfileName
           return {
