@@ -140,7 +140,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "policies": {
         "ALL": [
           {
-            "using": "(id = auth_fn.current_app_tenant_id())",
+            "using": "(auth_fn.app_user_has_access(id))",
             "roles": [
               "app_visitor"
             ],
@@ -172,7 +172,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "policies": {
         "ALL": [
           {
-            "using": "(app_tenant_id = auth_fn.current_app_tenant_id())",
+            "using": "(auth_fn.app_user_has_access(app_tenant_id))",
             "roles": [
               "app_visitor"
             ],
@@ -205,7 +205,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "ALL": [],
         "SELECT": [
           {
-            "using": "(app_tenant_id = auth_fn.current_app_tenant_id())",
+            "using": "(auth_fn.app_user_has_access(app_tenant_id))",
             "roles": [
               "app_visitor"
             ],
