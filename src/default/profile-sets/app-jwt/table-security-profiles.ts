@@ -241,7 +241,16 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
               "app_visitor"
             ],
             "permissive": "PERMISSIVE",
-            "policyname": "all_access",
+            "policyname": "user_access",
+            "with_check": null
+          },
+          {
+            "using": "(auth_fn.app_user_has_access(app_tenant_id))",
+            "roles": [
+              "app_visitor"
+            ],
+            "permissive": "PERMISSIVE",
+            "policyname": "tenant_access",
             "with_check": null
           }
         ],
