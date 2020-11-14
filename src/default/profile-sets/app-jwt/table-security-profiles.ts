@@ -13,16 +13,10 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
   ],
   "defaultInitialTableAssignments": [
     {
-      "schemaName": "auth",
-      "tableAssignments": {
-        "app_user": "app-user-access-direct",
-        "app_tenant": "app-tenant-access-direct"
-      },
-      "viewAssignments": {}
-    },
-    {
       "schemaName": "app",
       "tableAssignments": {
+        "app_user": "app-user-access-direct",
+        "app_tenant": "app-tenant-access-direct",
         "license": "app-license-assigned-to",
         "license_permission": "app-license-permission-assigned-to",
         "app_tenant_subscription": "app-tenant-select"
