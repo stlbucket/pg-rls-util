@@ -77,8 +77,8 @@ async function computeTablePolicy (table: PgrTable, tableSecurityProfile: PgrTab
     config.scriptTemplates.tablePolicyTemplate,
     templateVariables
   )
-  .split('&#x3D;')
-  .join('=')
+  .split('&#x3D;').join('=')
+  .split('&amp;#39;').join(`'`)
 
   return tableScript
 
