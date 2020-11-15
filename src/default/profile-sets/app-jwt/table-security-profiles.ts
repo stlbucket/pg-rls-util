@@ -89,18 +89,28 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "name": "all-select",
       "enableRls": true,
       "grants": {
-        "ALL": [],
-        "SELECT": [
+        "ALL": [
           {
             "roleName": "app_visitor"
           }
         ],
+        "SELECT": [],
         "INSERT": [],
         "UPDATE": [],
         "DELETE": []
       },
       "policies": {
-        "ALL": [],
+        "ALL": [
+          {
+            "using": "auth_fn.current_app_user_permission_key() = 'SuperAdmin'",
+            "roles": [
+              "app_visitor"
+            ],
+            "permissive": "PERMISSIVE",
+            "policyname": "all_access",
+            "with_check": null
+          }
+        ],
         "SELECT": [
           {
             "using": "true",

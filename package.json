@@ -44,7 +44,7 @@
     "build": "tsc -p tsconfig.release.json",
     "build:watch": "tsc -w -p tsconfig.release.json",
     "lint": "eslint . --ext .ts,.tsx",
-    "exec": "npm run build && node -r dotenv/config pg-rls-util",
+    "cmd": "npm run build && node -r dotenv/config pg-rls-util",
     "test": "jest --coverage",
     "gen-json-schemata": "npm run build && node -r dotenv/config build/src/gen-json-schemata",
     "test:watch": "jest --watch"

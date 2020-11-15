@@ -6,7 +6,7 @@ import { getConnectionInfo } from '../../../../pg-client'
 
 const tableFullSqlTemplate = `
 -- to run this sql:
---                       
+--
 -- psql -h {{{dbHost}}} -U {{{dbUser}}} -d {{dbName}} -f {{{tableScriptPath}}}
 
 -- this script is meant to used during development                    ----------------------
@@ -80,7 +80,15 @@ async function writeSchemaTableScripts(tableScriptSet: PgrSchemaTableScriptSet):
             includeRemoveRls: config.tableSecurityProfileSet.includeTableRlsRemoval
           }
         )
-        await writeFileSync(tableScriptPath, fileContents.split('&#x3D;').join('='))
+        const cleanedContents = fileContents
+        .split('&#x3D;').join('=')
+        .split('&amp;#39;').join(`'`)
+
+        // if (ts.tableName === 'application') {
+        //   console.log(cleanedContents)
+        //   process.exit()
+        // }
+        await writeFileSync(tableScriptPath, cleanedContents)
       }
     )
   await Promise.all(p)
