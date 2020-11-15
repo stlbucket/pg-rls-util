@@ -1,4 +1,4 @@
-import {writeFileSync} from 'fs'
+import writeFileToDisk from './write-file-to-disk'
 import loadConfig from '../../../../config'
 import writeDirectories from './write-directories'
 import writeAllTableScripts from './write-table-scripts'
@@ -30,12 +30,12 @@ ${allTablesScript}
 
 ${allFunctionsScript}
 `
-    await writeFileSync(config.artifactPaths.ownershipPath, scriptSet.ownershipScript)
-    await writeFileSync(config.artifactPaths.removeAllRlsPath, scriptSet.removeAllRlsScript)
-    await writeFileSync(config.artifactPaths.createRolesPath, scriptSet.createRolesScript)
-    await writeFileSync(config.artifactPaths.schemaUsageSqlPath, scriptSet.schemaUsageSql)
+    await writeFileToDisk(config.artifactPaths.ownershipPath, scriptSet.ownershipScript)
+    await writeFileToDisk(config.artifactPaths.removeAllRlsPath, scriptSet.removeAllRlsScript)
+    await writeFileToDisk(config.artifactPaths.createRolesPath, scriptSet.createRolesScript)
+    await writeFileToDisk(config.artifactPaths.schemaUsageSqlPath, scriptSet.schemaUsageSql)
 
-    await writeFileSync(config.artifactPaths.oneScriptToRuleThemAllPath, oneScriptToRuleThemAll)
+    await writeFileToDisk(config.artifactPaths.oneScriptToRuleThemAllPath, oneScriptToRuleThemAll)
 }
 
 export default writeAllScripts

@@ -1,8 +1,9 @@
 import * as Mustache from 'mustache'
-import { existsSync, mkdirSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync } from 'fs'
 import {PgrTableScript, PgrSchemaTableScriptSet, PgrMasterTableScriptSet} from "../../../../d"
 import loadConfig from '../../../../config'
 import { getConnectionInfo } from '../../../../pg-client'
+import writeFileToDisk from './write-file-to-disk'
 
 const tableFullSqlTemplate = `
 -- to run this sql:
@@ -88,14 +89,14 @@ async function writeSchemaTableScripts(tableScriptSet: PgrSchemaTableScriptSet):
         //   console.log(cleanedContents)
         //   process.exit()
         // }
-        await writeFileSync(tableScriptPath, cleanedContents)
+        await writeFileToDisk(tableScriptPath, cleanedContents)
       }
     )
   await Promise.all(p)
 
   const fullSchemaScript = tableScriptSet.tableScripts.map(ts => ts.tableScript).join('\n')
 
-  await writeFileSync(`${schemaDir}/all-table-policies---${tableScriptSet.schemaName}.sql`, fullSchemaScript)
+  await writeFileToDisk(`${schemaDir}/all-table-policies---${tableScriptSet.schemaName}.sql`, fullSchemaScript)
 
   return fullSchemaScript
 }
@@ -112,7 +113,7 @@ async function writeAllSchemaTableScripts(masterTableScriptSet: PgrMasterTableSc
   const schemaScripts = await Promise.all(p)
 
   const allTablesScript = schemaScripts.join('\n')
-  await writeFileSync(`${config.artifactsDirectory}/all-table-policies---all-schemata.sql`, allTablesScript)
+  await writeFileToDisk(`${config.artifactsDirectory}/all-table-policies---all-schemata.sql`, allTablesScript)
   return allTablesScript
 }
 

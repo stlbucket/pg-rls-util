@@ -1,4 +1,5 @@
-import { existsSync, mkdirSync, writeFileSync } from 'fs'
+import writeFileToDisk from './write-file-to-disk'
+import { existsSync, mkdirSync } from 'fs'
 import {PgrFunctionScript, PgrSchemaFunctionScriptSet, PgrMasterFunctionScriptSet} from "../../../../d"
 import loadConfig from '../../../../config'
 
@@ -17,19 +18,19 @@ async function writeSchemaFunctionScripts(functionScriptSet: PgrSchemaFunctionSc
     .map(
       async(ts: PgrFunctionScript) => {
         const functionScriptPath = `${functionsDir}/${ts.functionName}.sql`
-        await writeFileSync(functionScriptPath, ts.functionScript)
+        await writeFileToDisk(functionScriptPath, ts.functionScript)
       }
     )
   const scripts = await Promise.all(p)
 scripts
   const fullSchemaScript = `
------------------------------- 
------------------------------- FUNCTION SECURITY GRANTS FOR SCHEMA: ${functionScriptSet.schemaName}  
------------------------------- 
+------------------------------
+------------------------------ FUNCTION SECURITY GRANTS FOR SCHEMA: ${functionScriptSet.schemaName}
+------------------------------
 ${functionScriptSet.functionScripts.map(fs => fs.functionScript).join('\n')}
 
 `
-  await writeFileSync(`${schemaDir}/all-function-policies---${functionScriptSet.schemaName}.sql`, fullSchemaScript)
+  await writeFileToDisk(`${schemaDir}/all-function-policies---${functionScriptSet.schemaName}.sql`, fullSchemaScript)
 
   return fullSchemaScript
 }
@@ -44,7 +45,7 @@ async function writeAllSchemaFunctionScripts(masterFunctionScriptSet: PgrMasterF
   )
   const schemaScripts = await Promise.all(p)
   const allFunctionsScript = schemaScripts.join('\n')
-  await writeFileSync(`${config.artifactsDirectory}/all-function-policies---all-schemata.sql`, allFunctionsScript)
+  await writeFileToDisk(`${config.artifactsDirectory}/all-function-policies---all-schemata.sql`, allFunctionsScript)
   return allFunctionsScript
 }
 
