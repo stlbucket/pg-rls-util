@@ -29,7 +29,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
         "organization": "app-tenant-select",
         "contact": "app-tenant-select",
         "facility": "app-tenant-select",
-        "location": "app-tenant-select",
+        "location": "app-tenant-select"
       },
       "viewAssignments": {}
     }
@@ -195,18 +195,28 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "name": "app-tenant-select",
       "enableRls": true,
       "grants": {
-        "ALL": [],
-        "SELECT": [
+        "ALL": [
           {
             "roleName": "app_visitor"
           }
         ],
+        "SELECT": [],
         "INSERT": [],
         "UPDATE": [],
         "DELETE": []
       },
       "policies": {
-        "ALL": [],
+        "ALL": [
+          {
+            "using": "auth_fn.current_app_user_permission_key() = 'SuperAdmin'",
+            "roles": [
+              "app_visitor"
+            ],
+            "permissive": "PERMISSIVE",
+            "policyname": "all_access",
+            "with_check": null
+          }
+        ],
         "SELECT": [
           {
             "using": "(auth_fn.app_user_has_access(app_tenant_id))",
@@ -268,18 +278,28 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "name": "app-license-assigned-to",
       "enableRls": true,
       "grants": {
-        "ALL": [],
-        "SELECT": [
+        "ALL": [
           {
             "roleName": "app_visitor"
           }
         ],
+        "SELECT": [],
         "INSERT": [],
         "UPDATE": [],
         "DELETE": []
       },
       "policies": {
-        "ALL": [],
+        "ALL": [
+          {
+            "using": "auth_fn.current_app_user_permission_key() = 'SuperAdmin'",
+            "roles": [
+              "app_visitor"
+            ],
+            "permissive": "PERMISSIVE",
+            "policyname": "all_access",
+            "with_check": null
+          }
+        ],
         "SELECT": [
           {
             "using": "(assigned_to_app_user_id = auth_fn.current_app_user_id())",
@@ -300,18 +320,28 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "name": "app-license-permission-assigned-to",
       "enableRls": true,
       "grants": {
-        "ALL": [],
-        "SELECT": [
+        "ALL": [
           {
             "roleName": "app_visitor"
           }
         ],
+        "SELECT": [],
         "INSERT": [],
         "UPDATE": [],
         "DELETE": []
       },
       "policies": {
-        "ALL": [],
+        "ALL": [
+          {
+            "using": "auth_fn.current_app_user_permission_key() = 'SuperAdmin'",
+            "roles": [
+              "app_visitor"
+            ],
+            "permissive": "PERMISSIVE",
+            "policyname": "all_access",
+            "with_check": null
+          }
+        ],
         "SELECT": [
           {
             "using": "(license_id in (select id from app.license where assigned_to_app_user_id = auth_fn.current_app_user_id()))",
