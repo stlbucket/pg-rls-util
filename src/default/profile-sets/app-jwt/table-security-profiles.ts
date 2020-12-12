@@ -59,7 +59,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "grants": {
         "ALL": [
           {
-            "roleName": "app_visitor"
+            "roleName": "app_usr"
           }
         ],
         "SELECT": [],
@@ -72,7 +72,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
           {
             "using": "true",
             "roles": [
-              "app_visitor"
+              "app_usr"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "all_access",
@@ -89,12 +89,12 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "name": "all-select",
       "enableRls": true,
       "grants": {
-        "ALL": [
+        "ALL": [],
+        "SELECT": [
           {
-            "roleName": "app_visitor"
+            "roleName": "app_usr"
           }
         ],
-        "SELECT": [],
         "INSERT": [],
         "UPDATE": [],
         "DELETE": []
@@ -102,9 +102,9 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "policies": {
         "ALL": [
           {
-            "using": "auth_fn.current_app_user_permission_key() = 'SuperAdmin'",
+            "using": "true",
             "roles": [
-              "app_visitor"
+              "app_sp_adm"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "all_access",
@@ -115,7 +115,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
           {
             "using": "true",
             "roles": [
-              "app_visitor"
+              "app_usr"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "all_select",
@@ -133,7 +133,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "grants": {
         "ALL": [
           {
-            "roleName": "app_visitor"
+            "roleName": "app_usr"
           }
         ],
         "SELECT": [],
@@ -146,7 +146,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
           {
             "using": "(auth_fn.app_user_has_access(id))",
             "roles": [
-              "app_visitor"
+              "app_usr"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "all_access",
@@ -165,7 +165,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "grants": {
         "ALL": [
           {
-            "roleName": "app_visitor"
+            "roleName": "app_usr"
           }
         ],
         "SELECT": [],
@@ -178,7 +178,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
           {
             "using": "(auth_fn.app_user_has_access(app_tenant_id))",
             "roles": [
-              "app_visitor"
+              "app_usr"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "all_access",
@@ -197,10 +197,14 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "grants": {
         "ALL": [
           {
-            "roleName": "app_visitor"
+            "roleName": "app_sp_adm"
           }
         ],
-        "SELECT": [],
+        "SELECT": [
+          {
+            "roleName": "app_usr"
+          }
+        ],
         "INSERT": [],
         "UPDATE": [],
         "DELETE": []
@@ -208,9 +212,9 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "policies": {
         "ALL": [
           {
-            "using": "auth_fn.current_app_user_permission_key() = 'SuperAdmin'",
+            "using": "true",
             "roles": [
-              "app_visitor"
+              "app_sp_adm"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "all_access",
@@ -221,7 +225,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
           {
             "using": "(auth_fn.app_user_has_access(app_tenant_id))",
             "roles": [
-              "app_visitor"
+              "app_usr"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "app_tenant_select",
@@ -239,7 +243,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "grants": {
         "ALL": [
           {
-            "roleName": "app_visitor"
+            "roleName": "app_usr"
           }
         ],
         "SELECT": [],
@@ -252,7 +256,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
           {
             "using": "(id = auth_fn.current_app_user_id())",
             "roles": [
-              "app_visitor"
+              "app_usr"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "user_access",
@@ -261,7 +265,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
           {
             "using": "(auth_fn.app_user_has_access(app_tenant_id))",
             "roles": [
-              "app_visitor"
+              "app_usr"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "tenant_access",
@@ -280,10 +284,14 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "grants": {
         "ALL": [
           {
-            "roleName": "app_visitor"
+            "roleName": "app_sp_adm"
           }
         ],
-        "SELECT": [],
+        "SELECT": [
+          {
+            "roleName": "app_usr"
+          }
+        ],
         "INSERT": [],
         "UPDATE": [],
         "DELETE": []
@@ -291,9 +299,9 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "policies": {
         "ALL": [
           {
-            "using": "auth_fn.current_app_user_permission_key() = 'SuperAdmin'",
+            "using": "true",
             "roles": [
-              "app_visitor"
+              "app_sp_adm"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "all_access",
@@ -304,7 +312,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
           {
             "using": "(assigned_to_app_user_id = auth_fn.current_app_user_id())",
             "roles": [
-              "app_visitor"
+              "app_usr"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "assigned_to",
@@ -322,10 +330,14 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "grants": {
         "ALL": [
           {
-            "roleName": "app_visitor"
+            "roleName": "app_sp_adm"
           }
         ],
-        "SELECT": [],
+        "SELECT": [
+          {
+            "roleName": "app_usr"
+          }
+        ],
         "INSERT": [],
         "UPDATE": [],
         "DELETE": []
@@ -333,9 +345,9 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
       "policies": {
         "ALL": [
           {
-            "using": "auth_fn.current_app_user_permission_key() = 'SuperAdmin'",
+            "using": "true",
             "roles": [
-              "app_visitor"
+              "app_sp_adm"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "all_access",
@@ -346,7 +358,7 @@ const tableSecurityProfileSet: PgrTableSecurityProfileSet = {
           {
             "using": "(license_id in (select id from app.license where assigned_to_app_user_id = auth_fn.current_app_user_id()))",
             "roles": [
-              "app_visitor"
+              "app_usr"
             ],
             "permissive": "PERMISSIVE",
             "policyname": "license_assigned_to",

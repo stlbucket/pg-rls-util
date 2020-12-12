@@ -8,16 +8,24 @@ const roleSet: PgrRoleSet = {
   },
   "dbAuthenticatorRole": {
     "roleName": "app_authenticator",
-    "applicableRoles": [ "app_visitor", "app_anonymous" ]
+    "applicableRoles": [ "app_anon", "app_usr", "app_adm", "app_sp_adm" ]
   },
   "dbUserRoles": [
     {
-      "roleName": "app_anonymous",
+      "roleName": "app_anon",
       "applicableRoles": []
     },
     {
-      "roleName": "app_visitor",
-      "applicableRoles": ["app_anonymous"]
+      "roleName": "app_usr",
+      "applicableRoles": ["app_anon"]
+    },
+    {
+      "roleName": "app_adm",
+      "applicableRoles": ["app_anon", "app_usr"]
+    },
+    {
+      "roleName": "app_sp_adm",
+      "applicableRoles": ["app_anon", "app_usr", "app_adm"]
     }
   ]
 }

@@ -63,14 +63,12 @@ async function loadConfig(argv?: any): Promise<PgrConfig> {
 
   const schemata = process.env.PGR_SCHEMATA || argv.schemata
 
-  const projectConfig: PgrProjectConfig =
-    // schemata ? { schemata: schemata } :
-    (await loadOneConfigFile(projectConfigPath))
+  const existingConfig: PgrProjectConfig = (await loadOneConfigFile(projectConfigPath)) || {}
 
-  // if (!projectConfig.schemata) {
-  //   console.error("Schemata must be defined in one of three ways:  process.env.PGR_SCHEMATA; argv.schemata; current-draft/project-config.json")
-  //   process.exit(1)
-  // }
+  const projectConfig = {
+    ...existingConfig,
+    schemata: schemata || existingConfig.schemata
+  }
 
   const roles: PgrRoleSet = await loadOneConfigFile(roleSetPath)
   const tableSecurityProfiles: PgrTableSecurityProfileSet = await loadOneConfigFile(tableSecurityProfilesPath)

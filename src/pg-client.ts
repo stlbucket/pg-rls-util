@@ -27,12 +27,12 @@ const doQuery = async (sql: string, params?: string [], asUsername?: string) => 
       await client.query(`set jwt.claims.contact_id = '${user.contact_id}';`)
     }
     const result = await client.query(sql,params)
-    return result  
+    return result
   } catch (e) {
     console.log('ERROR: PGCLIENT:', e.toString())
     throw e
   } finally {
-    client.release()
+    if (client) client.release()
   }
 }
 
@@ -56,7 +56,7 @@ const getConnectionInfo = async (): Promise<PgrConnectionInfo> => {
   const dbName = connectionString.split('://')[1].split('/')[1]
   const dbHost = connectionString.split('://')[1].split('@')[1].split(':')[0].split('/')[0]
   const dbPort = connectionString.split('://')[1].split('@')[1].split('/')[0].split(':')[1]
-  
+
   return {
     dbUser: dbUser
     ,dbPassword: dbPassword

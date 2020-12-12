@@ -1,12 +1,12 @@
 import { PgrFunctionSecurityProfileSet } from "../../../d"
 
 const functionSecurityProfileSet: PgrFunctionSecurityProfileSet = {
-  "defaultProfileName": "app-visitor-execute",
+  "defaultProfileName": "app-usr-execute",
   "defaultInitialFunctionAssignments": [
     {
       "schemaName": "auth_fn",
       "functionAssignments": {
-        "authenticate": "app-anonymous-execute"
+        "authenticate": "app-anon-execute"
       }
     }
   ],
@@ -18,15 +18,27 @@ const functionSecurityProfileSet: PgrFunctionSecurityProfileSet = {
       }
     },
     {
-      "name": "app-visitor-execute",
+      "name": "app-adm-execute",
       "grants": {
-        "EXECUTE": ["app_visitor"],
+        "EXECUTE": ["app_adm"],
       }
     },
     {
-      "name": "app-anonymous-execute",
+      "name": "app-sp-adm-execute",
       "grants": {
-        "EXECUTE": ["app_anonymous"],
+        "EXECUTE": ["app_sp_adm"],
+      }
+    },
+    {
+      "name": "app-usr-execute",
+      "grants": {
+        "EXECUTE": ["app_usr"],
+      }
+    },
+    {
+      "name": "app-anon-execute",
+      "grants": {
+        "EXECUTE": ["app_anon"],
       }
     }
   ]
