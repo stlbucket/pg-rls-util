@@ -12,14 +12,14 @@ async function findRemovedTables(config: PgrConfig, dbIntrospection: PgrDbIntros
 
       const removedTables = fromConfigTables.filter(t => fromDbTables.indexOf(t) === -1)
       const removedViews = fromConfigViews.filter(t => fromDbViews.indexOf(t) === -1)
-      
+
       return {
         ...tSet,
         viewAssignments: removedViews.reduce(
           (all, v) => {
             return {
               ...all,
-              
+
               [v]: tSet.viewAssignments[v]
             }
           }, {}
@@ -28,7 +28,7 @@ async function findRemovedTables(config: PgrConfig, dbIntrospection: PgrDbIntros
           (all, t) => {
             return {
               ...all,
-              
+
               [t]: tSet.tableAssignments[t]
             }
           }, {}
