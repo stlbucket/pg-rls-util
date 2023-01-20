@@ -17,15 +17,11 @@ const initPool = async() => {
 }
 
 
-const doQuery = async (sql: string, params?: string [], asUsername?: string) => {
+const doQuery = async (sql: string, params?: string []) => {
   let client
   await initPool()
   try {
     client = await pool.connect()
-    if (asUsername) {
-      const user = (await client.query(`select * from ${userTable} where username = $1;`, [asUsername])).rows[0]
-      await client.query(`set jwt.claims.contact_id = '${user.contact_id}';`)
-    }
     const result = await client.query(sql,params)
     return result
   } catch (e) {
@@ -35,17 +31,6 @@ const doQuery = async (sql: string, params?: string [], asUsername?: string) => 
     if (client) client.release()
   }
 }
-
-const findUser = async (username: string) => {
-  const result = await doQuery(`select * from ${userTable} where username = $1;`, [username]);
-  return result.rows[0];
-};
-
-const becomeUser = async (username: string) => {
-  const user = await findUser(username)
-  await doQuery(`set jwt.claims.contact_id = '${user.contact_id}';`);
-  return user
-};
 
 const getConnectionInfo = async (): Promise<PgrConnectionInfo> => {
   const config = await loadConfig()
@@ -70,6 +55,4 @@ const getConnectionInfo = async (): Promise<PgrConnectionInfo> => {
 export {
   getConnectionInfo
   ,doQuery
-  ,findUser
-  ,becomeUser
 }
